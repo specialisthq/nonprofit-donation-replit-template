@@ -301,6 +301,26 @@ describe("StickyMobileCta — scroll visibility behavior", () => {
   });
 });
 
+describe("Landing page — mobile hero stacking order (DOM)", () => {
+  it("renders hero blocks in the spec order: headline+image (A), donation module (B), case-for-support (C)", () => {
+    renderLanding();
+    const a = screen.getByTestId("hero-block-a");
+    const b = screen.getByTestId("hero-block-b");
+    const c = screen.getByTestId("hero-block-c");
+    // DOM order matches mobile visual order because the wrapper is a single
+    // column grid on mobile (no order-* overrides on small screens).
+    const pos = (el: HTMLElement) =>
+      Array.from(el.parentElement!.children).indexOf(el);
+    expect(pos(a)).toBeLessThan(pos(b));
+    expect(pos(b)).toBeLessThan(pos(c));
+    // Block A contains both the headline and the hero image.
+    expect(within(a).getByRole("heading", { level: 1 })).toBeInTheDocument();
+    expect(within(a).getByRole("img")).toBeInTheDocument();
+    // Block B is the donation module (form role).
+    expect(within(b).getByRole("form")).toBeInTheDocument();
+  });
+});
+
 describe("Landing page — gift impact tiers", () => {
   it("scrolls AND focuses the donation module heading when a tier is clicked", async () => {
     const user = userEvent.setup();
@@ -330,7 +350,7 @@ describe("Landing page — gift impact tiers", () => {
     scrollSpy.mockRestore();
   });
 
-  it("when monthly mode is active, clicking a tier sets a MONTHLY gift (not silently switching to one-time)", async () => {
+  it("when monthly mode is active, the tier grid mirrors monthly amounts AND clicking one sets a MONTHLY gift", async () => {
     const user = userEvent.setup();
     vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(() => {});
     renderLanding();
@@ -342,10 +362,17 @@ describe("Landing page — gift impact tiers", () => {
     });
     await user.click(monthlyToggle);
 
-    // Click the first impact tier (a one-time-style amount label).
+    // The tier grid should now display the configured monthly amounts.
     const tierGrid = screen.getByLabelText(
       /suggested gift amounts and what they fund/i,
     );
+    const firstMonthly = site.amounts.monthly[0];
+    if (firstMonthly) {
+      expect(
+        within(tierGrid).getByText(`$${firstMonthly.amount}`),
+      ).toBeInTheDocument();
+    }
+
     const firstTierBtn = within(tierGrid).getAllByRole("button")[0];
     await user.click(firstTierBtn);
 

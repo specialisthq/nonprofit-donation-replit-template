@@ -106,9 +106,20 @@ export function LandingPage() {
           className="absolute inset-0 -z-10 bg-gradient-to-b from-[hsl(var(--surface-muted))] to-[hsl(var(--surface))]"
         />
         <Container>
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-12 items-start">
-            {/* Left: copy + image */}
-            <div className="lg:col-span-7 order-1">
+          {/*
+            Mobile DOM/visual order (single column): A → B → C
+              A = eyebrow + headline + subhead + hero image
+              B = donation module
+              C = case-for-support bullet list
+            Desktop layout (lg+): two columns, donation module is the
+            right rail spanning both rows; A is top-left, C is below A.
+          */}
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-12 lg:items-start">
+            {/* A — headline + image (top-left on desktop, first on mobile) */}
+            <div
+              data-testid="hero-block-a"
+              className="lg:col-span-7 lg:col-start-1 lg:row-start-1"
+            >
               <p className="text-xs sm:text-sm font-semibold uppercase tracking-wider text-[hsl(var(--primary))] mb-3">
                 {landing.eyebrow}
               </p>
@@ -122,7 +133,7 @@ export function LandingPage() {
                 {landing.subhead}
               </p>
 
-              <div className="rounded-2xl overflow-hidden bg-[hsl(var(--surface-muted))] aspect-[16/9] mb-6">
+              <div className="rounded-2xl overflow-hidden bg-[hsl(var(--surface-muted))] aspect-[16/9]">
                 <img
                   src={branding.heroImagePath}
                   alt={`Volunteers at ${org.name} packing community grocery boxes.`}
@@ -133,22 +144,13 @@ export function LandingPage() {
                   decoding="async"
                 />
               </div>
-
-              <ul className="grid gap-2 text-[15px] sm:text-base text-[hsl(var(--text))]">
-                {landing.caseForSupport.slice(0, 3).map((line, i) => (
-                  <li key={i} className="flex gap-2">
-                    <span
-                      aria-hidden="true"
-                      className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[hsl(var(--accent))]"
-                    />
-                    <span>{line}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
 
-            {/* Right: donation module */}
-            <div className="lg:col-span-5 order-2 lg:sticky lg:top-24">
+            {/* B — donation module (right rail on desktop, second on mobile) */}
+            <div
+              data-testid="hero-block-b"
+              className="lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 lg:sticky lg:top-24"
+            >
               <DonationModule
                 ref={moduleRef}
                 id={DONATE_ANCHOR}
@@ -160,6 +162,22 @@ export function LandingPage() {
                 onCustomAmountChange={setCustom}
               />
             </div>
+
+            {/* C — case-for-support bullets (below image on desktop, third on mobile) */}
+            <ul
+              data-testid="hero-block-c"
+              className="grid gap-2 text-[15px] sm:text-base text-[hsl(var(--text))] lg:col-span-7 lg:col-start-1 lg:row-start-2"
+            >
+              {landing.caseForSupport.slice(0, 3).map((line, i) => (
+                <li key={i} className="flex gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[hsl(var(--accent))]"
+                  />
+                  <span>{line}</span>
+                </li>
+              ))}
+            </ul>
           </div>
           {/* Sentinel for the sticky-mobile-CTA observer */}
           <div id={HERO_SENTINEL_ID} aria-hidden="true" className="h-px" />
@@ -316,7 +334,10 @@ export function LandingPage() {
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
             aria-label="Suggested gift amounts and what they fund"
           >
-            {site.amounts.oneTime.slice(0, 6).map((tier) => {
+            {/* Mirror the donation module's currently-active mode so a donor
+                browsing in monthly mode sees monthly tiers (and clicking one
+                preselects a monthly gift), per the research doc. */}
+            {site.amounts[mode].slice(0, 6).map((tier) => {
               const isHighlighted = tier.default;
               return (
                 <li key={tier.amount}>
