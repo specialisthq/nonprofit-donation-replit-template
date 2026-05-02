@@ -1,8 +1,18 @@
 import { AlertTriangle } from "lucide-react";
 import { site } from "@/../site.config";
 
-export function LegalDisclaimer() {
-  const { heading, body } = site.copy.legal.disclaimer;
+export type LegalDisclaimerProps = {
+  /**
+   * Optional override for the heading + body text. Defaults to
+   * `site.copy.legal.disclaimer`. Used by pages that need a lighter
+   * variant (e.g. the donor bill of rights uses a softer "starter
+   * text" wording).
+   */
+  override?: { heading: string; body: string };
+};
+
+export function LegalDisclaimer({ override }: LegalDisclaimerProps = {}) {
+  const { heading, body } = override ?? site.copy.legal.disclaimer;
   return (
     <div
       role="note"

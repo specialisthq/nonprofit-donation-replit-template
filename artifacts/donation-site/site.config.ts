@@ -733,9 +733,20 @@ export type SiteConfig = {
        * token. Typically the state where the org is incorporated.
        */
       governingState: string;
+      /**
+       * Lighter-weight disclaimer variant for pages whose body is
+       * sector-standard text (e.g. the donor bill of rights), where
+       * the default "starter template / get your own counsel"
+       * wording is unnecessarily heavy.
+       */
+      disclaimerLight: {
+        heading: string;
+        body: string;
+      };
       privacy: LegalPageCopy;
       terms: LegalPageCopy;
       refundPolicy: LegalPageCopy;
+      donorBillOfRights: LegalPageCopy;
     };
   };
 
@@ -1524,6 +1535,11 @@ export const site: SiteConfig = {
           "These policies are a sensible starting point for a small US-based 501(c)(3), but every nonprofit's situation is different. Before you publish this site, have your own legal counsel review and tailor every legal page (privacy, terms, refund, donor bill of rights) to your jurisdiction, programs, and data practices.",
       },
       governingState: "Illinois",
+      disclaimerLight: {
+        heading: "Standard nonprofit-sector text — not legal advice.",
+        body:
+          "The Donor Bill of Rights below is the widely adopted ten-point statement originally developed by the Association of Fundraising Professionals, the Association for Healthcare Philanthropy, the Council for Advancement and Support of Education, and Giving USA Foundation. It is reproduced here as a starter; have your own counsel review the page before publishing.",
+      },
       privacy: {
         title: "Privacy Policy",
         lastUpdated: "September 15, 2025",
@@ -1854,6 +1870,123 @@ export const site: SiteConfig = {
             heading: "7. How to reach us about refunds",
             body: [
               "If you need a refund, a correction, or just have a question about a donation, please contact us — we want to help.",
+            ],
+          },
+        ],
+      },
+      donorBillOfRights: {
+        title: "Donor Bill of Rights",
+        lastUpdated: "September 15, 2025",
+        intro:
+          "{orgName} proudly affirms the following commitments to our donors. Philanthropy is built on a relationship of trust between donors and the organizations they support, and we believe everyone who gives to {orgName} deserves clear, public assurances about how their generosity will be honored.",
+        sections: [
+          {
+            id: "right-1",
+            heading: "I. To be informed of the organization's mission",
+            body: [
+              "You have the right to be informed of the organization's mission, of the way the organization intends to use donated resources, and of its capacity to use donations effectively for their intended purposes.",
+              "In plain language: before you give, you should be able to read who we are, what we do, and what your gift is going to fund. Our mission and program details live on our About and Impact pages.",
+            ],
+          },
+          {
+            id: "right-2",
+            heading: "II. To be informed of the identity of those serving on the governing board",
+            body: [
+              "You have the right to be informed of the identity of those serving on the organization's governing board, and to expect the board to exercise prudent judgment in its stewardship responsibilities.",
+              "In plain language: you should be able to look up who runs the organization. Our board roster and bios are listed on our Transparency page.",
+            ],
+          },
+          {
+            id: "right-3",
+            heading: "III. To have access to the organization's most recent financial statements",
+            body: [
+              "You have the right to have access to the organization's most recent financial statements.",
+              "In plain language: you should be able to see how money comes in and how it's spent. Our most recent annual report and IRS Form 990 are linked from the Transparency page.",
+            ],
+          },
+          {
+            id: "right-4",
+            heading: "IV. To be assured your gifts will be used for the purposes for which they were given",
+            body: [
+              "You have the right to be assured your gifts will be used for the purposes for which they were given.",
+              "In plain language: if you give to a specific program — for example, after-school meals — those dollars go to that program. Restricted gifts stay restricted.",
+            ],
+          },
+          {
+            id: "right-5",
+            heading: "V. To receive appropriate acknowledgment and recognition",
+            body: [
+              "You have the right to receive appropriate acknowledgment and recognition.",
+              "In plain language: every gift is acknowledged in writing — a tax-receipt acknowledgment by email immediately, and a personal thank-you within five business days.",
+            ],
+          },
+          {
+            id: "right-6",
+            heading: "VI. To be assured that information about your donation is handled with respect and with confidentiality",
+            body: [
+              "You have the right to be assured that information about your donation is handled with respect and with confidentiality to the extent provided by law.",
+              "In plain language: we treat your donor record with the same care we'd want for our own. See our Privacy Policy for the full details.",
+            ],
+          },
+          {
+            id: "right-7",
+            heading: "VII. To expect that all relationships with individuals representing the organization will be professional in nature",
+            body: [
+              "You have the right to expect that all relationships with individuals representing the organization will be professional in nature.",
+              "In plain language: whether you're talking to a board member, a staffer, or a volunteer, you should be treated with respect, honesty, and professionalism. Always.",
+            ],
+          },
+          {
+            id: "right-8",
+            heading: "VIII. To be informed whether those seeking donations are volunteers, employees, or hired solicitors",
+            body: [
+              "You have the right to be informed whether those seeking donations are volunteers, employees of the organization, or hired solicitors.",
+              "In plain language: anyone soliciting on our behalf should clearly identify their role. We do not currently use third-party paid solicitors.",
+            ],
+          },
+          {
+            id: "right-9",
+            heading: "IX. To have the opportunity to have your name deleted from mailing lists",
+            body: [
+              "You have the right to have the opportunity for your names to be deleted from mailing lists that an organization may intend to share.",
+              "In plain language: we never sell or rent donor information. You can ask us at any time to remove your name from any list we keep, including our newsletter and direct-mail program.",
+            ],
+          },
+          {
+            id: "right-10",
+            heading: "X. To feel free to ask questions when making a donation and to receive prompt, truthful, and forthright answers",
+            body: [
+              "You have the right to feel free to ask questions when making a donation and to receive prompt, truthful, and forthright answers.",
+              "In plain language: if you have a question — about anything, before or after you give — ask. We will respond within two US business days, and we will not dodge the question.",
+            ],
+          },
+          {
+            id: "attribution",
+            heading: "Attribution",
+            body: [
+              "The Donor Bill of Rights was created by the Association of Fundraising Professionals (AFP), the Association for Healthcare Philanthropy (AHP), the Council for Advancement and Support of Education (CASE), and the Giving Institute (formerly the American Association of Fund-Raising Counsel). It has been endorsed by numerous nonprofit organizations and is reproduced here in its standard form.",
+            ],
+          },
+          {
+            id: "how-we-live-it",
+            heading: "How we live this out",
+            body: [
+              "Below are the specific commitments {orgName} makes to back up each of these rights. Each links to the page where you can read the full policy.",
+            ],
+            links: [
+              { label: "Secure payment via PayPal — we never see your card", href: "/transparency" },
+              { label: "Transparent financials, board, and Form 990", href: "/transparency" },
+              { label: "Donor privacy: we never sell donor information", href: "/privacy" },
+              { label: "Cancel a monthly gift anytime, no questions asked", href: "/refund-policy" },
+              { label: "Refunds and corrections issued promptly and in good faith", href: "/refund-policy" },
+              { label: "Terms of use governing the site", href: "/terms" },
+            ],
+          },
+          {
+            id: "contact",
+            heading: "Questions about your rights as a donor?",
+            body: [
+              "If anything on this page is unclear, or if you ever feel one of these commitments has not been honored, we want to know.",
             ],
           },
         ],

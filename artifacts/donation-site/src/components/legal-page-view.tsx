@@ -14,6 +14,7 @@ export function LegalPageView({
   copy,
   prefix,
   contactSlot,
+  disclaimerOverride,
 }: {
   copy: LegalPageCopy;
   /**
@@ -27,6 +28,13 @@ export function LegalPageView({
    * /contact alongside the configured contact email.
    */
   contactSlot?: ReactNode;
+  /**
+   * Optional alternate wording for the disclaimer banner. Useful for
+   * pages whose copy is sector-standard text (e.g. the donor bill
+   * of rights) where the default "starter template" wording is too
+   * heavy.
+   */
+  disclaimerOverride?: { heading: string; body: string };
 }) {
   const { org } = site;
   const vars: Record<string, string> = {
@@ -64,7 +72,7 @@ export function LegalPageView({
         </header>
 
         <div className="mb-10">
-          <LegalDisclaimer />
+          <LegalDisclaimer override={disclaimerOverride} />
         </div>
 
         <Prose>
