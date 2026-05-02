@@ -2,26 +2,26 @@ import { Link } from "react-router-dom";
 import { site } from "@/../site.config";
 import { LegalPageView } from "@/components/legal-page-view";
 
-export function PrivacyPage() {
+export function TermsPage() {
   const { org } = site;
   return (
     <LegalPageView
-      copy={site.copy.legal.privacy}
-      prefix="privacy"
+      copy={site.copy.legal.terms}
+      prefix="terms"
       contactSlot={
         <p>
           Email us at{" "}
           <a
             href={`mailto:${org.contactEmail}`}
-            data-testid="privacy-contact-email"
+            data-testid="terms-contact-email"
           >
             {org.contactEmail}
           </a>
           , or{" "}
-          <Link to="/contact" data-testid="privacy-contact-link">
+          <Link to="/contact" data-testid="terms-contact-link">
             visit our contact page
           </Link>{" "}
-          for our mailing address and other ways to reach us.
+          for any questions about these Terms.
         </p>
       }
     />

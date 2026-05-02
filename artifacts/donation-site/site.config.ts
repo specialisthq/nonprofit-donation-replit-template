@@ -711,7 +711,14 @@ export type SiteConfig = {
         heading: string;
         body: string;
       };
+      /**
+       * US state (or other jurisdiction) whose laws govern the Terms
+       * of Use. Used wherever legal prose contains the `{state}`
+       * token. Typically the state where the org is incorporated.
+       */
+      governingState: string;
       privacy: LegalPageCopy;
+      terms: LegalPageCopy;
     };
   };
 
@@ -1499,6 +1506,7 @@ export const site: SiteConfig = {
         body:
           "These policies are a sensible starting point for a small US-based 501(c)(3), but every nonprofit's situation is different. Before you publish this site, have your own legal counsel review and tailor every legal page (privacy, terms, refund, donor bill of rights) to your jurisdiction, programs, and data practices.",
       },
+      governingState: "Illinois",
       privacy: {
         title: "Privacy Policy",
         lastUpdated: "September 15, 2025",
@@ -1612,6 +1620,125 @@ export const site: SiteConfig = {
             heading: "13. How to contact us",
             body: [
               "If you have any questions about this policy or about how we handle your information, please reach out — we're real people and we'd rather over-explain than leave you guessing.",
+            ],
+          },
+        ],
+      },
+      terms: {
+        title: "Terms of Use",
+        lastUpdated: "September 15, 2025",
+        intro:
+          "These Terms of Use govern your access to and use of this website. By visiting the site or making a donation, you agree to these Terms. They are written in plain language wherever possible — if anything is unclear, email {contactEmail} and we'll walk through it with you.",
+        sections: [
+          {
+            id: "acceptance",
+            heading: "1. Acceptance of these Terms",
+            body: [
+              "By accessing this website, browsing its pages, submitting the contact form, subscribing to our newsletter, or making a donation, you confirm that you have read these Terms and agree to be bound by them. If you do not agree, please do not use the site.",
+            ],
+          },
+          {
+            id: "eligibility",
+            heading: "2. Eligibility",
+            body: [
+              "You must be at least 18 years old, or have the consent of a parent or legal guardian, to use this site or make a donation. By using the site you represent that you meet this requirement.",
+            ],
+          },
+          {
+            id: "license",
+            heading: "3. License to use the site",
+            body: [
+              "We grant you a limited, personal, non-exclusive, non-transferable, revocable license to access and use this website for personal, non-commercial purposes such as learning about our work, donating, or contacting us. All other uses require our prior written permission.",
+            ],
+          },
+          {
+            id: "prohibited-conduct",
+            heading: "4. Prohibited conduct",
+            body: [
+              "When you use this site, you agree not to:",
+            ],
+            bullets: [
+              "Use the site for any unlawful purpose, or in violation of any applicable law or regulation.",
+              "Attempt to gain unauthorized access to any part of the site, our servers, or any connected systems.",
+              "Interfere with the site's operation, including by introducing malware, denial-of-service attacks, or excessive automated requests.",
+              "Scrape, crawl, or harvest content or donor information from the site without our express written permission.",
+              "Impersonate {orgName}, our staff, our donors, or any other person or organization.",
+              "Submit fraudulent donations, chargebacks made in bad faith, or payment information that is not yours to use.",
+            ],
+          },
+          {
+            id: "intellectual-property",
+            heading: "5. Intellectual property",
+            body: [
+              "Unless otherwise noted, all content on this site — including text, graphics, logos, photographs, illustrations, and program names — is owned by {orgName} or licensed to us, and is protected by US and international copyright, trademark, and other laws.",
+              "You may share short excerpts and link to our pages for non-commercial educational and journalistic use, with attribution. You may not reproduce, republish, or repurpose substantial portions of our content, or use our name or logo to suggest endorsement, without our prior written consent.",
+            ],
+          },
+          {
+            id: "user-content",
+            heading: "6. Content you submit",
+            body: [
+              "If you submit information to us through the contact form, by email, or otherwise (a \"Submission\"), you grant us a non-exclusive, worldwide, royalty-free license to use, store, and reference that Submission for the purpose of responding to you, operating our programs, and complying with our legal obligations.",
+              "You agree that your Submissions will not contain content that is unlawful, defamatory, infringing, or that you do not have permission to share. We may remove or refuse to act on Submissions at our discretion.",
+            ],
+          },
+          {
+            id: "donations",
+            heading: "7. Donations and PayPal",
+            body: [
+              "All donations made through this site are processed by PayPal, an independent third-party payment processor. We do not see, store, or process your full payment card or bank account details — only the donor information PayPal forwards to us (typically your name, email, and donation amount).",
+              "By donating, you also agree to PayPal's own terms of service and privacy policy. We are not responsible for PayPal's services, fees, or downtime. For information about refunds and corrections, see our Refund / Correction Policy.",
+            ],
+          },
+          {
+            id: "third-party-links",
+            heading: "8. Third-party links",
+            body: [
+              "This site may link to websites, services, or content operated by third parties — for example, news articles about our work, our PayPal donation page, or social media profiles. We do not control, endorse, or assume responsibility for any third-party content. Following a link to a third-party site is at your own risk and subject to that site's own terms.",
+            ],
+          },
+          {
+            id: "warranties",
+            heading: "9. Disclaimer of warranties",
+            body: [
+              "This site is provided on an \"as is\" and \"as available\" basis. To the fullest extent permitted by law, {orgName} disclaims all warranties, express or implied, including warranties of merchantability, fitness for a particular purpose, non-infringement, and uninterrupted or error-free operation.",
+              "We do not warrant that the site will always be available, that the information on it will always be accurate or current, or that the site will be free from viruses or other harmful components. Use the site at your own risk.",
+            ],
+          },
+          {
+            id: "liability",
+            heading: "10. Limitation of liability",
+            body: [
+              "To the fullest extent permitted by law, {orgName}, its directors, officers, employees, volunteers, and agents will not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or relating to your use of (or inability to use) this site, including loss of data, loss of donations, or loss of goodwill, even if we have been advised of the possibility of such damages.",
+              "Because we do not sell goods or services on this site, our total cumulative liability to you for any claim arising from your use of the site is limited to the greater of (a) one hundred US dollars (US$100) and (b) the amount you donated through the site in the twelve months preceding the claim.",
+            ],
+          },
+          {
+            id: "indemnification",
+            heading: "11. Indemnification",
+            body: [
+              "You agree to indemnify and hold harmless {orgName} and its directors, officers, employees, volunteers, and agents from any claim, demand, loss, or damages — including reasonable attorneys' fees — arising out of or related to your breach of these Terms, your misuse of the site, or your violation of any law or third-party right.",
+            ],
+          },
+          {
+            id: "governing-law",
+            heading: "12. Governing law and jurisdiction",
+            body: [
+              "These Terms are governed by the laws of the State of {state}, without regard to its conflict-of-laws principles. You agree that any dispute arising out of or relating to these Terms or your use of this site will be resolved exclusively in the state or federal courts located in {state}, and you consent to the personal jurisdiction of those courts.",
+            ],
+          },
+          {
+            id: "changes",
+            heading: "13. Changes to these Terms",
+            body: [
+              "We may update these Terms from time to time. When we do, we will revise the \"Last updated\" date at the top of this page. For material changes, we will also post a notice on the homepage. Your continued use of the site after changes take effect constitutes your acceptance of the updated Terms.",
+            ],
+          },
+          {
+            id: "contact",
+            heading: "14. How to contact us",
+            body: [
+              "If you have any questions about these Terms, please reach out — we'd rather answer a question now than have you guess.",
             ],
           },
         ],
