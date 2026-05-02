@@ -4,6 +4,7 @@ import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { RefundPolicyPage } from "@/pages/refund-policy";
 import { StubPage } from "@/pages/stub";
 import { SiteLayout } from "@/components/site-layout";
+import { DonationModule } from "@/components/donation-module";
 import { site } from "@/../site.config";
 
 function renderRefund() {
@@ -217,6 +218,44 @@ describe("Refund policy page — route + navigation (E2E-style)", () => {
       expect(banner).toHaveTextContent(site.copy.legal.disclaimer.body);
       unmount();
     }
+  });
+});
+
+describe("Donation module → /refund-policy linkage", () => {
+  const moduleProps = {
+    mode: "oneTime" as const,
+    amount: null,
+    customAmount: "",
+    onModeChange: () => {},
+    onAmountChange: () => {},
+    onCustomAmountChange: () => {},
+  };
+
+  it("renders the 'Cancel anytime' microcopy as a link to /refund-policy", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <DonationModule {...moduleProps} />
+      </MemoryRouter>,
+    );
+    const link = screen.getByTestId("donation-module-trust-link-refresh");
+    expect(link.tagName).toBe("A");
+    expect(link).toHaveAttribute("href", "/refund-policy");
+    expect(link).toHaveTextContent(/cancel anytime/i);
+  });
+
+  it("navigates to the refund policy when the donor clicks 'Cancel anytime'", () => {
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <SiteLayout>
+          <Routes>
+            <Route path="/" element={<DonationModule {...moduleProps} />} />
+            <Route path="/refund-policy" element={<RefundPolicyPage />} />
+          </Routes>
+        </SiteLayout>
+      </MemoryRouter>,
+    );
+    fireEvent.click(screen.getByTestId("donation-module-trust-link-refresh"));
+    expect(screen.getByTestId("refund-title")).toBeInTheDocument();
   });
 });
 

@@ -141,14 +141,16 @@ describe("DonationModule — fallback CTA when no amount is selected", () => {
     customAmount: string;
   }) {
     return render(
-      <DonationModule
-        mode={props.mode}
-        amount={props.amount}
-        customAmount={props.customAmount}
-        onModeChange={() => {}}
-        onAmountChange={() => {}}
-        onCustomAmountChange={() => {}}
-      />,
+      <MemoryRouter>
+        <DonationModule
+          mode={props.mode}
+          amount={props.amount}
+          customAmount={props.customAmount}
+          onModeChange={() => {}}
+          onAmountChange={() => {}}
+          onCustomAmountChange={() => {}}
+        />
+      </MemoryRouter>,
     );
   }
 

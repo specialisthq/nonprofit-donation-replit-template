@@ -1,4 +1,5 @@
 import { forwardRef, useMemo, type Ref } from "react";
+import { Link } from "react-router-dom";
 import { ShieldCheck, Receipt, RefreshCw, Lock } from "lucide-react";
 import site, { type SuggestedAmount } from "@config";
 import { donateLinkProps } from "@/lib/paypal";
@@ -235,13 +236,26 @@ export const DonationModule = forwardRef(function DonationModule(
       </ButtonLink>
 
       {/* Trust microcopy */}
-      <ul className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-[hsl(var(--text-muted))]">
+      <ul
+        data-testid="donation-module-trust-items"
+        className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 text-xs text-[hsl(var(--text-muted))]"
+      >
         {copy.trustItems.map((item, i) => {
           const Icon = TRUST_ICONS[item.icon];
           return (
             <li key={i} className="flex items-center gap-1.5">
               <Icon className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
-              {item.label}
+              {item.href ? (
+                <Link
+                  to={item.href}
+                  data-testid={`donation-module-trust-link-${item.icon}`}
+                  className="underline decoration-dotted underline-offset-2 hover:text-[hsl(var(--primary))]"
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <span>{item.label}</span>
+              )}
             </li>
           );
         })}

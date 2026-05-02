@@ -95,7 +95,16 @@ export type DonationModuleCopy = {
   /** CTA fallback when no amount is selected. */
   defaultCtaLabel: string;
   /** Microcopy items shown beneath the CTA. */
-  trustItems: { icon: "lock" | "shield" | "receipt" | "refresh"; label: string }[];
+  trustItems: {
+    icon: "lock" | "shield" | "receipt" | "refresh";
+    label: string;
+    /**
+     * Optional internal route (e.g. "/refund-policy"). If set, the
+     * label renders as a link so donors can read the full policy
+     * behind a piece of trust microcopy without leaving the form.
+     */
+    href?: string;
+  }[];
 };
 
 export type SectionHeader = {
@@ -846,7 +855,7 @@ export const site: SiteConfig = {
           { icon: "lock", label: "Secure payment" },
           { icon: "shield", label: "Tax-deductible" },
           { icon: "receipt", label: "Receipt emailed" },
-          { icon: "refresh", label: "Cancel anytime" },
+          { icon: "refresh", label: "Cancel anytime", href: "/refund-policy" },
         ],
       },
       trustStrip: [
