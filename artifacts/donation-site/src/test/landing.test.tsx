@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { act, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { LandingPage } from "@/pages/landing";
 import { DonationModule } from "@/components/donation-module";
+import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 import site from "@config";
 import { buildDonateUrl, donateLinkProps } from "@/lib/paypal";
 
@@ -241,5 +242,120 @@ describe("Landing page — secondary giving + sticky mobile CTA", () => {
     const button = within(sticky).getByRole("button", { hidden: true });
     expect(button).toBeInTheDocument();
     expect(button.textContent).toMatch(/donate/i);
+  });
+});
+
+describe("StickyMobileCta — scroll visibility behavior", () => {
+  let sentinel: HTMLDivElement;
+
+  beforeEach(() => {
+    sentinel = document.createElement("div");
+    sentinel.id = "test-sentinel";
+    document.body.appendChild(sentinel);
+  });
+
+  afterEach(() => {
+    sentinel.remove();
+    vi.restoreAllMocks();
+  });
+
+  function mockSentinelTop(top: number) {
+    vi.spyOn(sentinel, "getBoundingClientRect").mockReturnValue({
+      top,
+      bottom: top + 1,
+      left: 0,
+      right: 0,
+      width: 0,
+      height: 1,
+      x: 0,
+      y: top,
+      toJSON: () => ({}),
+    });
+  }
+
+  it("stays hidden while the sentinel is still visible (top >= 0) and becomes visible after the user scrolls past it (top < 0)", () => {
+    mockSentinelTop(200);
+    render(
+      <StickyMobileCta
+        watchSentinelId="test-sentinel"
+        scrollToId="donate"
+        label="Donate now"
+      />,
+    );
+    const bar = screen.getByTestId("sticky-mobile-cta");
+    expect(bar).toHaveAttribute("aria-hidden", "true");
+
+    // Simulate the user scrolling past the sentinel.
+    mockSentinelTop(-50);
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    expect(bar).toHaveAttribute("aria-hidden", "false");
+
+    // Simulate scrolling back up — bar should hide again.
+    mockSentinelTop(120);
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    expect(bar).toHaveAttribute("aria-hidden", "true");
+  });
+});
+
+describe("Landing page — gift impact tiers", () => {
+  it("scrolls AND focuses the donation module heading when a tier is clicked", async () => {
+    const user = userEvent.setup();
+    const scrollSpy = vi
+      .spyOn(HTMLElement.prototype, "scrollIntoView")
+      .mockImplementation(() => {});
+    renderLanding();
+
+    const tierGrid = screen.getByLabelText(
+      /suggested gift amounts and what they fund/i,
+    );
+    const firstTierBtn = within(tierGrid).getAllByRole("button")[0];
+    await user.click(firstTierBtn);
+
+    // Wait one animation frame for the scroll/focus side effect.
+    await act(
+      () =>
+        new Promise<void>((resolve) =>
+          requestAnimationFrame(() => resolve()),
+        ),
+    );
+
+    expect(scrollSpy).toHaveBeenCalled();
+    const heading = document.getElementById("donate-heading");
+    expect(heading).not.toBeNull();
+    expect(document.activeElement).toBe(heading);
+    scrollSpy.mockRestore();
+  });
+
+  it("when monthly mode is active, clicking a tier sets a MONTHLY gift (not silently switching to one-time)", async () => {
+    const user = userEvent.setup();
+    vi.spyOn(HTMLElement.prototype, "scrollIntoView").mockImplementation(() => {});
+    renderLanding();
+
+    // Toggle into monthly mode in the donation module.
+    const form = screen.getByRole("form");
+    const monthlyToggle = within(form).getByRole("button", {
+      name: new RegExp(site.copy.landing.donationModule.monthlyLabel, "i"),
+    });
+    await user.click(monthlyToggle);
+
+    // Click the first impact tier (a one-time-style amount label).
+    const tierGrid = screen.getByLabelText(
+      /suggested gift amounts and what they fund/i,
+    );
+    const firstTierBtn = within(tierGrid).getAllByRole("button")[0];
+    await user.click(firstTierBtn);
+
+    // The donation module's primary CTA must now read "Start my $X monthly gift"
+    // (and the monthly toggle must remain pressed).
+    expect(monthlyToggle).toHaveAttribute("aria-pressed", "true");
+    expect(
+      within(form).getByRole("link", {
+        name: /start my \$.+ monthly gift/i,
+      }),
+    ).toBeInTheDocument();
   });
 });

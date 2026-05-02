@@ -84,7 +84,8 @@ export const DonationModule = forwardRef(function DonationModule(
     >
       <h2
         id={`${id}-heading`}
-        className="text-lg sm:text-xl font-bold text-[hsl(var(--text))] mb-1"
+        tabIndex={-1}
+        className="text-lg sm:text-xl font-bold text-[hsl(var(--text))] mb-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--primary))] rounded"
       >
         {copy.heading}
       </h2>

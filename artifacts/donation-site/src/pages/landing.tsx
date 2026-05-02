@@ -79,12 +79,18 @@ export function LandingPage() {
     : "Donate now";
 
   function selectImpactTier(value: number) {
-    setMode("oneTime");
-    setOneTimeAmount(value);
-    setOneTimeCustom("");
+    // Bind the picked amount to the donor's currently active mode rather than
+    // forcing one-time, so a donor who already toggled to "Monthly" gets a
+    // monthly gift at that amount instead of being silently switched back.
+    setAmount(value);
+    setCustom("");
     requestAnimationFrame(() => {
       const el = document.getElementById(DONATE_ANCHOR);
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Move keyboard focus into the donation module so screen-reader and
+      // keyboard users land on it (the heading carries tabIndex={-1}).
+      const heading = document.getElementById(`${DONATE_ANCHOR}-heading`);
+      heading?.focus({ preventScroll: true });
     });
   }
 
