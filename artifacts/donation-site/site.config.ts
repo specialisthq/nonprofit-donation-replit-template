@@ -458,11 +458,124 @@ export type SiteConfig = {
       };
     };
     transparency: {
-      headline: string;
-      financialsNote: string;
-      annualReportUrl?: string;
-      form990Url?: string;
-      ratings?: { name: string; url: string }[];
+      hero: {
+        eyebrow: string;
+        headline: string;
+        subhead: string;
+      };
+      /**
+       * "Trust at a glance" card shown beside the hero. Org name, EIN,
+       * founded year, status, and address are pulled directly from
+       * `site.org` (single source of truth) — these fields are just
+       * the surrounding labels and microcopy.
+       */
+      orgSnapshot: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        /**
+         * Value rendered for the "Status" row, e.g. "501(c)(3) public
+         * charity". Kept in config so non-US cloners (or US orgs with a
+         * different status) can swap it without editing JSX.
+         */
+        statusValue: string;
+        /** Microcopy below the data card, e.g. accreditation note. */
+        statusLine?: string;
+      };
+      /**
+       * Most-recent-FY revenue / expense splits. Renders gracefully
+       * when only some lines are filled. When `lines` is empty, the
+       * section shows `emptyState` copy instead of the breakdown.
+       */
+      financials: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        /** Most recent fiscal year, e.g. 2024. */
+        fiscalYear: number;
+        lines: {
+          label: string;
+          /** Display string, e.g. "$1.2M" or "$92,400" — keep it human. */
+          value: string;
+          /** Optional 0–100 percent of total revenue. Renders as a small badge. */
+          percent?: number;
+          /** Optional 1-line context, e.g. "Audited Mar 2025". */
+          context?: string;
+        }[];
+        note?: string;
+        /** Empty-state copy shown when `lines` is empty. */
+        emptyState?: string;
+      };
+      /**
+       * Annual report, IRS Form 990, audited statements, etc.
+       * Empty array shows the `emptyState` copy so cloners see what
+       * belongs here rather than a blank section.
+       */
+      filings: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: { label: string; url: string; year: number }[];
+        emptyState?: string;
+      };
+      /**
+       * Charity-rating affiliations (Charity Navigator, Candid, BBB,
+       * etc.). Empty array hides the entire section cleanly.
+       */
+      ratings: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: {
+          org: string;
+          label: string;
+          url: string;
+          /** Path under /public; falls back to a generic shield icon. */
+          logoPath?: string;
+        }[];
+      };
+      governance: {
+        eyebrow: string;
+        headline: string;
+        body: string[];
+        /**
+         * Optional board roster / leadership page link. Set
+         * `external: true` for an off-site URL (opens in a new tab);
+         * leave it false/undefined for an internal route like
+         * "/about#leadership".
+         */
+        boardRoster?: { label: string; href: string; external?: boolean };
+      };
+      /**
+       * Plain-language donor commitments. Each item supports an
+       * optional internal link (e.g. /refund-policy or
+       * /donor-bill-of-rights) so commitments stay tied to the page
+       * that backs them up.
+       */
+      donorCommitments: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: {
+          icon: "lock" | "receipt" | "shield" | "refresh" | "heart" | "ban";
+          title: string;
+          body: string;
+          /**
+           * Optional follow-up link. Set `external: true` for an
+           * off-site URL (opens in a new tab); omit it for an internal
+           * route like "/refund-policy".
+           */
+          link?: { label: string; href: string; external?: boolean };
+        }[];
+      };
+      /** Small CTA pointing donors at /contact for follow-up questions. */
+      contactPointer: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        ctaLabel: string;
+        ctaHref: string;
+      };
     };
     contact: {
       headline: string;
@@ -1001,15 +1114,147 @@ export const site: SiteConfig = {
       },
     },
     transparency: {
-      headline: "Where your money goes.",
-      financialsNote:
-        "We publish our audited financial statements and IRS Form 990 every year. We're proud to be evaluated by independent charity rating organizations.",
-      annualReportUrl: "#",
-      form990Url: "#",
-      ratings: [
-        { name: "Candid (GuideStar)", url: "#" },
-        { name: "Charity Navigator", url: "#" },
-      ],
+      hero: {
+        eyebrow: "Built for trust",
+        headline: "Open books, real receipts.",
+        subhead:
+          "We publish our financials, ratings, governance, and donor commitments in one place. If a question isn't answered here, email us — we pick up the phone.",
+      },
+      orgSnapshot: {
+        eyebrow: "Org snapshot",
+        headline: "Who we are, on paper.",
+        statusValue: "501(c)(3) public charity",
+        statusLine:
+          "Brightwell Community Fund is a registered 501(c)(3) public charity. Donations are tax-deductible in the U.S. to the full extent allowed by law.",
+      },
+      financials: {
+        eyebrow: "Financials",
+        headline: "Where every dollar went.",
+        subhead:
+          "Our most recent audited fiscal year. Operating costs are covered separately by a private endowment, so 100% of public donations reach programs.",
+        fiscalYear: 2024,
+        // Cloners: replace these with totals from your most recent audited
+        // 990. Percentages are whole numbers (0–100). Empty array hides the
+        // breakdown and shows `emptyState` instead.
+        lines: [
+          {
+            label: "Total revenue",
+            value: "$1,284,000",
+            context: "Audited March 2025",
+          },
+          { label: "Programs", value: "$1,156,000", percent: 90 },
+          { label: "Administration", value: "$77,000", percent: 6 },
+          { label: "Fundraising", value: "$51,000", percent: 4 },
+        ],
+        note:
+          "Numbers reflect the audited fiscal year ending December 2024. The full audit and Form 990 are linked below.",
+        emptyState:
+          "We'll publish our most recent audited financials here as soon as they're available.",
+      },
+      filings: {
+        eyebrow: "Reports & filings",
+        headline: "Read the source documents.",
+        subhead:
+          "Annual report, IRS Form 990, and audited financial statements — straight from the filings we send to the IRS and our board.",
+        items: [
+          { label: "Annual report", url: "#", year: 2024 },
+          { label: "IRS Form 990", url: "#", year: 2023 },
+          { label: "Audited financial statements", url: "#", year: 2023 },
+          { label: "IRS Form 990", url: "#", year: 2022 },
+        ],
+        emptyState:
+          "Cloner: add at least one filing here so donors can see your most recent annual report or 990.",
+      },
+      ratings: {
+        eyebrow: "Independent ratings",
+        headline: "Verified by people who watch nonprofits for a living.",
+        subhead:
+          "We're proud to be evaluated by independent charity rating organizations. Click any badge to view our public profile.",
+        items: [
+          {
+            org: "Candid (GuideStar)",
+            label: "Platinum Seal of Transparency 2025",
+            url: "#",
+          },
+          {
+            org: "Charity Navigator",
+            label: "Four-Star Charity",
+            url: "#",
+          },
+          {
+            org: "BBB Wise Giving Alliance",
+            label: "Accredited Charity",
+            url: "#",
+          },
+        ],
+      },
+      governance: {
+        eyebrow: "Governance",
+        headline: "An independent board, accountable in public.",
+        body: [
+          "Brightwell is governed by a 9-member volunteer board of directors. Directors serve three-year terms, and no director receives compensation from the organization.",
+          "The board meets quarterly, reviews audited financials annually, and approves the program budget every fiscal year. Conflicts of interest are disclosed in writing and recorded in board minutes.",
+        ],
+        boardRoster: {
+          label: "View our board roster & leadership",
+          href: "#",
+          external: true,
+        },
+      },
+      donorCommitments: {
+        eyebrow: "Our promises to you",
+        headline: "What you can count on as a donor.",
+        subhead:
+          "These commitments apply to every gift, whether it's $5 or $5,000.",
+        items: [
+          {
+            icon: "lock",
+            title: "Secure payment",
+            body: "Every gift is processed through PayPal's encrypted donation system. We never see or store your card details.",
+          },
+          {
+            icon: "receipt",
+            title: "Immediate receipts",
+            body: "You'll receive a tax-deductible receipt by email the moment your donation is processed — no waiting, no follow-up required.",
+          },
+          {
+            icon: "ban",
+            title: "We never sell donor data",
+            body: "We don't sell, rent, or trade your name, email, or giving history. Ever.",
+          },
+          {
+            icon: "refresh",
+            title: "Cancel monthly anytime",
+            body: "Monthly gifts can be paused, changed, or canceled in seconds — directly from your PayPal account or by emailing us.",
+          },
+          {
+            icon: "shield",
+            title: "Refunds & corrections",
+            body: "Mistyped an amount? Charged twice? We'll fix it within two business days, no questions asked.",
+            link: {
+              label: "Read the full refund policy",
+              href: "/refund-policy",
+            },
+          },
+          {
+            icon: "heart",
+            title: "Your rights as a donor",
+            body: "We follow the international Donor Bill of Rights — the published standard for ethical fundraising.",
+            link: {
+              label: "Read the Donor Bill of Rights",
+              href: "/donor-bill-of-rights",
+            },
+          },
+        ],
+      },
+      contactPointer: {
+        eyebrow: "Still have questions?",
+        headline: "Talk to a human.",
+        body:
+          "We read every message. If something on this page is unclear or you want to verify any number, reach out — we'll respond within two business days.",
+        ctaLabel: "Contact us",
+        ctaHref: "/contact",
+      },
     },
     contact: {
       headline: "Get in touch.",

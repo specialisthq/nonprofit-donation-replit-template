@@ -4,6 +4,7 @@ import { LandingPage } from "@/pages/landing";
 import { ThankYouPage } from "@/pages/thank-you";
 import { AboutPage } from "@/pages/about";
 import { ImpactPage } from "@/pages/impact";
+import { TransparencyPage } from "@/pages/transparency";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -28,7 +29,7 @@ function App() {
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/impact" element={<ImpactPage />} />
-          <Route path="/transparency" element={<StubPage title="Transparency" />} />
+          <Route path="/transparency" element={<TransparencyPage />} />
           <Route path="/contact" element={<StubPage title="Contact" />} />
           <Route path="/privacy" element={<StubPage title="Privacy policy" />} />
           <Route path="/terms" element={<StubPage title="Terms of use" />} />

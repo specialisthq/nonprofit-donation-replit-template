@@ -141,22 +141,17 @@ function Footer() {
   const financialLinks: { label: string; href: string; external?: boolean }[] = [
     { label: "Transparency", href: "/transparency" },
   ];
-  if (transparency.annualReportUrl) {
+  // Surface up to the four most recent filings (annual report, 990, etc.)
+  // so the footer stays compact even if a cloner configures many years.
+  for (const filing of transparency.filings.items.slice(0, 4)) {
     financialLinks.push({
-      label: "Annual report",
-      href: transparency.annualReportUrl,
+      label: `${filing.label} (${filing.year})`,
+      href: filing.url,
       external: true,
     });
   }
-  if (transparency.form990Url) {
-    financialLinks.push({
-      label: "IRS Form 990",
-      href: transparency.form990Url,
-      external: true,
-    });
-  }
-  for (const rating of transparency.ratings ?? []) {
-    financialLinks.push({ label: rating.name, href: rating.url, external: true });
+  for (const rating of transparency.ratings.items) {
+    financialLinks.push({ label: rating.org, href: rating.url, external: true });
   }
 
   return (
