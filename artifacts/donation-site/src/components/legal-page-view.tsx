@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import { site, type LegalPageCopy } from "@/../site.config";
 import { Container, Heading, Prose, Section } from "@/components/primitives";
 import { LegalDisclaimer } from "@/components/legal-disclaimer";
@@ -90,16 +91,26 @@ export function LegalPageView({
                 <ul data-testid={`${prefix}-section-${s.id}-links`}>
                   {s.links.map((link) => {
                     const href = fill(link.href);
+                    const label = fill(link.label);
+                    const isInternalRoute =
+                      !link.external && href.startsWith("/");
                     return (
                       <li key={href}>
-                        <a
-                          href={href}
-                          {...(link.external
-                            ? { target: "_blank", rel: "noopener noreferrer" }
-                            : {})}
-                        >
-                          {fill(link.label)}
-                        </a>
+                        {isInternalRoute ? (
+                          <Link to={href}>{label}</Link>
+                        ) : (
+                          <a
+                            href={href}
+                            {...(link.external
+                              ? {
+                                  target: "_blank",
+                                  rel: "noopener noreferrer",
+                                }
+                              : {})}
+                          >
+                            {label}
+                          </a>
+                        )}
                       </li>
                     );
                   })}
