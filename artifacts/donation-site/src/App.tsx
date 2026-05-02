@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SiteLayout } from "@/components/site-layout";
-import { LandingPlaceholder } from "@/pages/landing-placeholder";
+import { LandingPage } from "@/pages/landing";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -10,7 +10,7 @@ function App() {
     <BrowserRouter basename={basename || "/"}>
       <SiteLayout>
         <Routes>
-          <Route path="/" element={<LandingPlaceholder />} />
+          <Route path="/" element={<LandingPage />} />
           <Route path="/thank-you" element={<StubPage title="Thank you" />} />
           <Route path="/about" element={<StubPage title="About" />} />
           <Route path="/impact" element={<StubPage title="Our impact" />} />

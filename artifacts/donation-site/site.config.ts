@@ -31,6 +31,72 @@ export type FaqItem = {
 export type ImpactMetric = {
   value: string;
   label: string;
+  /** Optional 1-line context shown beneath the metric on the landing page. */
+  context?: string;
+};
+
+export type Testimonial = {
+  quote: string;
+  author: string;
+  role?: string;
+};
+
+export type SecondaryGivingCard = {
+  title: string;
+  body: string;
+  ctaLabel: string;
+  /** Internal route (e.g. "/contact") or external URL. */
+  href: string;
+  /** If true, opens in a new tab (use for external links). */
+  external?: boolean;
+  /** If "share", triggers the native share dialog instead of navigating. */
+  action?: "share";
+};
+
+export type StoryBlock = {
+  eyebrow: string;
+  headline: string;
+  body: string[];
+  /** Path under /public; falls back to a styled gradient if omitted/missing. */
+  imagePath?: string;
+  imageAlt?: string;
+  /** Optional read-more link shown beneath the story. */
+  link?: { label: string; href: string };
+};
+
+export type TrustStripItem = {
+  icon: "lock" | "award" | "shield";
+  title: string;
+  body: string;
+  /** Optional internal route for an inline link inside `body`. */
+  linkHref?: string;
+  linkLabel?: string;
+};
+
+export type DonationModuleCopy = {
+  heading: string;
+  subhead: string;
+  amountLegend: string;
+  customLabel: string;
+  customPlaceholder: string;
+  oneTimeLabel: string;
+  monthlyLabel: string;
+  /** CTA fallback when no amount is selected. */
+  defaultCtaLabel: string;
+  /** Microcopy items shown beneath the CTA. */
+  trustItems: { icon: "lock" | "shield" | "receipt" | "refresh"; label: string }[];
+};
+
+export type SectionHeader = {
+  eyebrow: string;
+  headline: string;
+  subhead?: string;
+};
+
+export type FinalCta = {
+  headline: string;
+  body: string;
+  ctaLabel: string;
 };
 
 export type SiteConfig = {
@@ -103,7 +169,28 @@ export type SiteConfig = {
       headline: string;
       subhead: string;
       caseForSupport: string[];
+      /** Single-line note shown right under the donation form. */
+      donationModuleNote?: string;
+      donationModule: DonationModuleCopy;
+      /** Optional one-line donor testimonial shown in the hero trust strip. */
+      testimonial?: Testimonial;
+      trustStrip: TrustStripItem[];
+      /**
+       * Three impact metrics anchored beneath the hero. If omitted,
+       * the landing page falls back to the first 3 of `impact.metrics`.
+       */
+      impactProof?: ImpactMetric[];
+      impactProofHeader: SectionHeader;
+      storyBlock: StoryBlock;
+      giftImpact: SectionHeader;
+      faqHeader: SectionHeader;
+      secondaryGiving: {
+        eyebrow: string;
+        headline: string;
+        cards: SecondaryGivingCard[];
+      };
       faqs: FaqItem[];
+      finalCta: FinalCta;
     };
     thankYou: {
       headline: string;
@@ -209,7 +296,7 @@ export const site: SiteConfig = {
       border: "200 16% 88%",
     },
     logoPath: "/logo.svg",
-    heroImagePath: "/hero.jpg",
+    heroImagePath: "/hero.webp",
     supportingImagePaths: [],
   },
 
@@ -230,6 +317,115 @@ export const site: SiteConfig = {
         "100% of public donations go directly to community programs — operating costs are covered by a private endowment.",
         "Give today and a family in our community gets help this week.",
       ],
+      donationModuleNote:
+        "Secure payment via PayPal — pay with PayPal, Venmo, or any major credit card on the next screen.",
+      donationModule: {
+        heading: "Make your gift",
+        subhead: "100% secure. Tax-deductible. Cancel anytime.",
+        amountLegend: "Choose an amount",
+        customLabel: "Or enter a custom amount",
+        customPlaceholder: "Other amount",
+        oneTimeLabel: "One-time",
+        monthlyLabel: "Monthly",
+        defaultCtaLabel: "Donate now",
+        trustItems: [
+          { icon: "lock", label: "Secure payment" },
+          { icon: "shield", label: "Tax-deductible" },
+          { icon: "receipt", label: "Receipt emailed" },
+          { icon: "refresh", label: "Cancel anytime" },
+        ],
+      },
+      trustStrip: [
+        {
+          icon: "lock",
+          title: "Bank-grade security",
+          body: "Payments processed by PayPal — we never see your card.",
+        },
+        {
+          icon: "award",
+          title: "Transparent stewardship",
+          body: "— audited annually.",
+          linkHref: "/transparency",
+          linkLabel: "Read our financials",
+        },
+      ],
+      impactProofHeader: {
+        eyebrow: "The numbers behind your gift",
+        headline: "Real help, measured honestly.",
+      },
+      faqHeader: {
+        eyebrow: "Donor FAQ",
+        headline: "Questions donors ask us most.",
+      },
+      finalCta: {
+        headline: "Ready to help a neighbor today?",
+        body: "Your gift goes to work in our community this week.",
+        ctaLabel: "Make my gift",
+      },
+      testimonial: {
+        quote:
+          "I gave once after a hard month and they delivered groceries the next morning. Now I give every month.",
+        author: "Maria T.",
+        role: "Springfield resident & monthly donor",
+      },
+      impactProof: [
+        { value: "12,400", label: "Meals delivered last year", context: "to families in our service area" },
+        { value: "320", label: "Families directly served", context: "in the past 12 months" },
+        { value: "94¢", label: "Of every dollar to programs", context: "audited annually" },
+      ],
+      storyBlock: {
+        eyebrow: "A neighbor's story",
+        headline: "When the Alvarez family lost their income, the community showed up.",
+        body: [
+          "After a sudden layoff, the Alvarez family used our emergency grocery program for three months while they got back on their feet.",
+          "Today, they're regular volunteers in our Saturday delivery program — packing boxes for the next family who needs help.",
+          "Stories like theirs are why your gift matters. You're not just funding a program. You're keeping a neighbor stable.",
+        ],
+        imagePath: "/story.webp",
+        imageAlt: "A family unpacking a community grocery delivery in their kitchen.",
+        link: { label: "Read more impact stories", href: "/impact" },
+      },
+      giftImpact: {
+        eyebrow: "What your gift does",
+        headline: "Real impact, anchored in real numbers.",
+        subhead:
+          "We tie every suggested amount to a concrete outcome we can deliver in our community this month.",
+      },
+      secondaryGiving: {
+        eyebrow: "Other ways to help",
+        headline: "Not ready to give today? Here are more ways to make a difference.",
+        cards: [
+          {
+            title: "Give monthly",
+            body:
+              "Join our giving circle and provide steady, predictable support to families year-round.",
+            ctaLabel: "Start monthly gift",
+            href: "#donate",
+          },
+          {
+            title: "Employer match",
+            body:
+              "Many employers will match your gift dollar-for-dollar. Ask us how to set it up.",
+            ctaLabel: "Email us",
+            href: "/contact",
+          },
+          {
+            title: "Donate in honor",
+            body:
+              "Make a tribute gift in honor or memory of someone special. We'll send a card on your behalf.",
+            ctaLabel: "Get in touch",
+            href: "/contact",
+          },
+          {
+            title: "Share this page",
+            body:
+              "The fastest way to multiply your gift: tell one friend to give too. It only takes a tap.",
+            ctaLabel: "Share now",
+            href: "/",
+            action: "share",
+          },
+        ],
+      },
       faqs: [
         {
           question: "Is my donation tax-deductible?",

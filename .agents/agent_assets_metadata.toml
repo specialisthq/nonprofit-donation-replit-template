@@ -1,0 +1,14 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "vfZEeMWBwkN5xgdxzy492"
+uri = "file://artifacts/donation-site/public/hero.png"
+type = "image"
+title = "donation hero image"
+
+[[generated]]
+id = "ydfmtBjFguc0FZprR2ZfH"
+uri = "file://artifacts/donation-site/public/story.png"
+type = "image"
+title = "donation story image"

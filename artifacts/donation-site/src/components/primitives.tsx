@@ -53,15 +53,18 @@ export function Prose({ className, children }: { className?: string; children: R
   );
 }
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
-  return (
+export const Card = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
     <div
+      ref={ref}
       className={cn(
         "rounded-xl border bg-[hsl(var(--surface))] p-6 shadow-sm",
         className,
       )}
+      {...props}
     >
       {children}
     </div>
-  );
-}
+  ),
+);
+Card.displayName = "Card";

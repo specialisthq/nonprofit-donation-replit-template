@@ -22,9 +22,13 @@ A frontend-only pnpm workspace monorepo containing a clonable nonprofit donation
   - `src/components/primitives.tsx` — `Section`, `Container`, `Heading`, `Prose`, `Card`
   - `src/components/button.tsx` — `Button`, `ButtonLink` with primary/accent/secondary/ghost/outline variants
   - `src/components/accordion.tsx` — Radix-based accordion for FAQs
+  - `src/components/donation-module.tsx` — controlled donation form (one-time/monthly toggle, preset + custom amounts, dynamic CTA, trust microcopy)
+  - `src/components/sticky-mobile-cta.tsx` — bottom-anchored mobile CTA bar that appears once the user scrolls past the donation module
   - `src/lib/paypal.ts` — `buildDonateUrl()` and `donateLinkProps()` helpers that read PayPal config
   - `src/main.tsx` — applies theme tokens from `site.config.ts` to `:root` at boot
-  - `src/pages/` — page components; non-landing pages currently render stubs that downstream tasks replace
+  - `src/pages/landing.tsx` — full landing funnel: hero with donation module, trust strip, impact proof, story block, gift-impact tiers, FAQ, secondary giving, final CTA
+  - `src/pages/` — non-landing pages currently render stubs that downstream tasks replace
+  - `public/hero.webp`, `public/story.webp` — landing imagery (cloners replace under `/public`)
 - `scripts/` — workspace tooling
 
 ## Routes
