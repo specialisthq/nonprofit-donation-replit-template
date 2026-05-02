@@ -302,9 +302,61 @@ export type SiteConfig = {
       };
     };
     about: {
+      /** Short uppercase eyebrow above the hero headline. */
+      eyebrow: string;
+      /** Hero headline, e.g. "We're neighbors helping neighbors." */
       headline: string;
+      /** One-sentence supporting subhead beneath the headline. */
+      subhead: string;
+      /**
+       * Optional supporting image for the hero. The path is relative to
+       * /public (e.g. "/about-hero.jpg"). When omitted or the image fails
+       * to load, the page falls back to a tasteful brand-colored
+       * placeholder so the layout never collapses.
+       */
+      image?: {
+        src?: string;
+        alt: string;
+      };
+      /** Story / why-we-exist body — 2-4 short paragraphs. */
       story: string[];
-      teamNote?: string;
+      /** "What we believe" values cards. */
+      values: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: {
+          /** lucide-react icon picked from a curated set. */
+          icon: "heart" | "users" | "sparkles" | "handshake" | "shield" | "target";
+          title: string;
+          body: string;
+        }[];
+      };
+      /**
+       * Optional team section. Hidden entirely when `team` is omitted or
+       * `members` is empty — clones with no team to feature still get a
+       * clean page.
+       */
+      team?: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        members: {
+          name: string;
+          role: string;
+          /** Path under /public; falls back to an initials avatar. */
+          photoPath?: string;
+          bio?: string;
+        }[];
+      };
+      /** Closing call-to-action that drives the visitor back to the donation flow. */
+      closingCta: {
+        eyebrow?: string;
+        headline: string;
+        body: string;
+        /** Visible label of the donate button. */
+        ctaLabel: string;
+      };
     };
     impact: {
       headline: string;
@@ -664,14 +716,88 @@ export const site: SiteConfig = {
       },
     },
     about: {
+      eyebrow: "About us",
       headline: "We're neighbors helping neighbors.",
+      subhead:
+        "A small, local nonprofit putting every dollar to work for the families in our community — with the receipts to prove it.",
+      // Cloners: drop a real photo at /public/about-hero.jpg (or any path
+      // under /public) and update `src` here. Leave the whole `image` block
+      // out and the page renders a tasteful brand-colored placeholder.
+      image: {
+        src: undefined,
+        alt: "Brightwell volunteers loading grocery boxes for delivery",
+      },
       story: [
         "Brightwell Community Fund was founded in 2014 by a group of local parents and small-business owners who wanted to make sure no family in our town went hungry.",
         "Today we partner with schools, food pantries, and faith communities to deliver direct support to the families who need it most — quickly, respectfully, and without red tape.",
-        "Every dollar you give is stewarded by a board of community volunteers, audited annually, and reported transparently to our donors.",
+        "Every dollar you give is stewarded by a board of community volunteers, audited annually, and reported transparently to our donors. We exist to serve our neighbors — not to grow an institution.",
       ],
-      teamNote:
-        "Our team is small on purpose: five staff members, fifteen board members, and over two hundred active volunteers.",
+      values: {
+        eyebrow: "What we believe",
+        headline: "How we show up for our neighbors",
+        subhead:
+          "These four commitments shape every program, every dollar, and every decision we make.",
+        items: [
+          {
+            icon: "heart",
+            title: "Dignity first",
+            body: "We treat the families we serve the way we'd want our own families treated — with privacy, respect, and zero judgment.",
+          },
+          {
+            icon: "shield",
+            title: "Radical transparency",
+            body: "We publish our financials, board minutes, and program outcomes every year. If you can't trust where the money goes, nothing else matters.",
+          },
+          {
+            icon: "users",
+            title: "Local roots",
+            body: "Every dollar stays in our community. Our staff, board, and volunteers all live here — we're funding our own neighbors.",
+          },
+          {
+            icon: "target",
+            title: "Outcomes over optics",
+            body: "We measure what matters: meals delivered, rent kept current, kids safely cared for after school. Not press releases.",
+          },
+        ],
+      },
+      // Cloners: leave `team` undefined to hide the section entirely.
+      // Drop member photos at /public/team/<name>.jpg or any path you
+      // prefer; if the photo is missing we fall back to an initials chip.
+      team: {
+        eyebrow: "The team",
+        headline: "Small on purpose",
+        body:
+          "Five staff members, fifteen board members, and over two hundred active volunteers. We keep the team lean so more of every gift reaches the families we serve.",
+        members: [
+          {
+            name: "Maria Alvarez",
+            role: "Executive Director",
+            bio: "Former social worker. Founded Brightwell in 2014.",
+          },
+          {
+            name: "Devon Carter",
+            role: "Programs Director",
+            bio: "Runs our food, housing, and after-school programs.",
+          },
+          {
+            name: "Priya Shah",
+            role: "Board Chair",
+            bio: "Local pediatrician. Volunteer board chair since 2019.",
+          },
+          {
+            name: "James O'Connor",
+            role: "Treasurer",
+            bio: "CPA. Keeps our books open and audited.",
+          },
+        ],
+      },
+      closingCta: {
+        eyebrow: "Ready to help?",
+        headline: "Join the neighbors making this work possible",
+        body:
+          "Every gift — one-time or monthly — goes directly to the families in our community who need it most.",
+        ctaLabel: "Donate now",
+      },
     },
     impact: {
       headline: "Real help, measured honestly.",

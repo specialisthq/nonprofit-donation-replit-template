@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SiteLayout } from "@/components/site-layout";
 import { LandingPage } from "@/pages/landing";
 import { ThankYouPage } from "@/pages/thank-you";
+import { AboutPage } from "@/pages/about";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -24,7 +25,7 @@ function App() {
             cleanly whether or not PayPal appends query parameters.
           */}
           <Route path="/thank-you" element={<ThankYouPage />} />
-          <Route path="/about" element={<StubPage title="About" />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route path="/impact" element={<StubPage title="Our impact" />} />
           <Route path="/transparency" element={<StubPage title="Transparency" />} />
           <Route path="/contact" element={<StubPage title="Contact" />} />
