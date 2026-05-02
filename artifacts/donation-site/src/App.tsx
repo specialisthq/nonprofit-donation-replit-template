@@ -8,6 +8,7 @@ import { TransparencyPage } from "@/pages/transparency";
 import { ContactPage } from "@/pages/contact";
 import { PrivacyPage } from "@/pages/privacy";
 import { TermsPage } from "@/pages/terms";
+import { RefundPolicyPage } from "@/pages/refund-policy";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -36,7 +37,7 @@ function App() {
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<TermsPage />} />
-          <Route path="/refund-policy" element={<StubPage title="Refund / correction policy" legal />} />
+          <Route path="/refund-policy" element={<RefundPolicyPage />} />
           <Route path="/donor-bill-of-rights" element={<StubPage title="Donor bill of rights" legal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -726,6 +726,7 @@ export type SiteConfig = {
       governingState: string;
       privacy: LegalPageCopy;
       terms: LegalPageCopy;
+      refundPolicy: LegalPageCopy;
     };
   };
 
@@ -1759,6 +1760,91 @@ export const site: SiteConfig = {
             heading: "14. How to contact us",
             body: [
               "If you have any questions about these Terms, please reach out — we'd rather answer a question now than have you guess.",
+            ],
+          },
+        ],
+      },
+      refundPolicy: {
+        title: "Refund & Correction Policy",
+        lastUpdated: "September 15, 2025",
+        intro:
+          "Mistakes happen — wrong amount, duplicate charge, accidental recurring gift, or a card you no longer want to use. This policy explains how {orgName} handles refund and correction requests so you always know exactly what to expect. If you ever need help, email {contactEmail} and a real person will get back to you.",
+        sections: [
+          {
+            id: "commitment",
+            heading: "1. Our commitment",
+            body: [
+              "We treat every donation as a gift of trust. If something goes wrong with your donation — for any reason — we will work with you in good faith to make it right. We would much rather refund a mistaken gift than keep a donor who feels their concern was ignored.",
+              "Our goal is to respond to every refund or correction request within two US business days, and to resolve straightforward requests within five business days of receiving the necessary information.",
+            ],
+          },
+          {
+            id: "request-correction",
+            heading: "2. How to request a correction",
+            body: [
+              "Most corrections — wrong amount, duplicate gift, fraudulent charge, accidental recurring sign-up — can be handled by emailing us. To help us process your request quickly, please include the following information when you write to us:",
+            ],
+            bullets: [
+              "Your full name and the email address you used when you donated.",
+              "The donation amount and the approximate date of the gift.",
+              "Your PayPal transaction ID or confirmation number, if you have it.",
+              "A short description of what went wrong (for example: \"I meant to donate $25 but entered $250\" or \"I was charged twice for the same monthly gift\").",
+            ],
+            links: [
+              { label: "Email a refund request", href: "mailto:{contactEmail}?subject=Refund%20request" },
+            ],
+          },
+          {
+            id: "cancel-monthly",
+            heading: "3. How to cancel a monthly gift",
+            body: [
+              "All monthly donations to {orgName} are managed by PayPal, which means you can change or cancel them at any time directly from your own PayPal account — no need to contact us first. PayPal calls these arrangements \"automatic payments\" or \"pre-approved payments.\"",
+              "From a desktop browser, log in to your PayPal account, open Settings, choose Payments, and then \"Manage automatic payments.\" Find {orgName} in the list and click Cancel. The cancellation takes effect immediately; you will not be charged again.",
+              "If you would prefer that we handle the cancellation for you, email {contactEmail} with the subject line \"Cancel monthly\" and we will confirm cancellation in writing within two business days.",
+            ],
+            links: [
+              {
+                label: "Manage your PayPal automatic payments",
+                href: "https://www.paypal.com/myaccount/autopay/",
+                external: true,
+              },
+              {
+                label: "PayPal: Cancel a recurring payment (help article)",
+                href: "https://www.paypal.com/us/cshelp/article/how-do-i-cancel-an-automatic-payment-or-recurring-payment-help193",
+                external: true,
+              },
+            ],
+          },
+          {
+            id: "eligibility",
+            heading: "4. Refund eligibility & timeline",
+            body: [
+              "We will refund any donation in the following situations: the amount was incorrect, you were charged more than once for the same intended gift, the donation was unauthorized or fraudulent, your monthly gift continued past the date you intended to cancel, or you simply changed your mind within 30 days of giving.",
+              "Refunds beyond 30 days are evaluated on a case-by-case basis. We will always consider them in good faith, especially for unauthorized charges or hardship.",
+              "Once approved, refunds are issued back to the original payment method through PayPal. Most donors see the refund post within 3–5 business days, though depending on your bank or card issuer it can take up to 10 business days to appear on your statement.",
+            ],
+          },
+          {
+            id: "tax-receipts",
+            heading: "5. Tax-receipt corrections",
+            body: [
+              "If we issue you a refund — full or partial — we will also send a corrected donation acknowledgment by email. The corrected acknowledgment supersedes the original receipt.",
+              "Please do not claim a refunded donation as a charitable deduction on your tax return. If you have already filed your return for the year in which the gift was made, consult your tax advisor about whether you need to file an amended return. {orgName} cannot give tax advice; this is general information only.",
+            ],
+          },
+          {
+            id: "chargebacks",
+            heading: "6. Chargebacks and disputes",
+            body: [
+              "If you do not recognize a charge from {orgName} on your statement, please email us before filing a chargeback with your bank or card issuer. Most \"unrecognized\" charges turn out to be a one-time gift made under a different name, a monthly gift you set up some time ago, or a gift from a family member — and we can usually clear it up the same day.",
+              "Chargebacks cost us a fee on top of the refunded amount and take weeks to resolve. Reaching out to us first is faster for you and protects donor dollars.",
+            ],
+          },
+          {
+            id: "contact",
+            heading: "7. How to reach us about refunds",
+            body: [
+              "If you need a refund, a correction, or just have a question about a donation, please contact us — we want to help.",
             ],
           },
         ],
