@@ -132,6 +132,13 @@ export type LegalPageCopy = {
     body: string[];
     /** Optional bulleted list rendered after the paragraphs. */
     bullets?: string[];
+    /**
+     * Optional list of named links (e.g. PayPal's terms of service)
+     * rendered as a small "Related links" group at the bottom of
+     * the section. Set `external: true` for off-site URLs to apply
+     * `target="_blank" rel="noopener noreferrer"`.
+     */
+    links?: { label: string; href: string; external?: boolean }[];
   }[];
 };
 
@@ -1688,6 +1695,19 @@ export const site: SiteConfig = {
             body: [
               "All donations made through this site are processed by PayPal, an independent third-party payment processor. We do not see, store, or process your full payment card or bank account details — only the donor information PayPal forwards to us (typically your name, email, and donation amount).",
               "By donating, you also agree to PayPal's own terms of service and privacy policy. We are not responsible for PayPal's services, fees, or downtime. For information about refunds and corrections, see our Refund / Correction Policy.",
+            ],
+            links: [
+              {
+                label: "PayPal User Agreement",
+                href: "https://www.paypal.com/us/legalhub/useragreement-full",
+                external: true,
+              },
+              {
+                label: "PayPal Privacy Statement",
+                href: "https://www.paypal.com/us/legalhub/privacy-full",
+                external: true,
+              },
+              { label: "Our Refund / Correction Policy", href: "/refund-policy" },
             ],
           },
           {

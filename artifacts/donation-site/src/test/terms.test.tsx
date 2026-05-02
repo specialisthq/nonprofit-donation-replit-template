@@ -102,6 +102,38 @@ describe("TermsPage", () => {
     expect(node.textContent).toContain("PayPal");
   });
 
+  it("renders a real, external link to the PayPal User Agreement", () => {
+    renderTerms();
+    const linkList = screen.getByTestId("terms-section-donations-links");
+    const paypalAgreement = within(linkList).getByRole("link", {
+      name: /paypal user agreement/i,
+    });
+    expect(paypalAgreement).toHaveAttribute(
+      "href",
+      "https://www.paypal.com/us/legalhub/useragreement-full",
+    );
+    expect(paypalAgreement).toHaveAttribute("target", "_blank");
+    expect(paypalAgreement).toHaveAttribute("rel", "noopener noreferrer");
+  });
+
+  it("links to the PayPal Privacy Statement and our refund policy", () => {
+    renderTerms();
+    const linkList = screen.getByTestId("terms-section-donations-links");
+    const paypalPrivacy = within(linkList).getByRole("link", {
+      name: /paypal privacy statement/i,
+    });
+    expect(paypalPrivacy).toHaveAttribute(
+      "href",
+      "https://www.paypal.com/us/legalhub/privacy-full",
+    );
+    expect(paypalPrivacy).toHaveAttribute("target", "_blank");
+    const refund = within(linkList).getByRole("link", {
+      name: /refund \/ correction policy/i,
+    });
+    expect(refund).toHaveAttribute("href", "/refund-policy");
+    expect(refund).not.toHaveAttribute("target");
+  });
+
   it("links to the contact page from the final section", () => {
     renderTerms();
     const link = screen.getByTestId("terms-contact-link");

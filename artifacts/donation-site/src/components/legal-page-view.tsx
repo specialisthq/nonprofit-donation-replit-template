@@ -86,6 +86,22 @@ export function LegalPageView({
                   ))}
                 </ul>
               )}
+              {s.links && s.links.length > 0 && (
+                <ul data-testid={`${prefix}-section-${s.id}-links`}>
+                  {s.links.map((link) => (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        {...(link.external
+                          ? { target: "_blank", rel: "noopener noreferrer" }
+                          : {})}
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
               {s.id === "contact" && contactSlot}
             </section>
           ))}
