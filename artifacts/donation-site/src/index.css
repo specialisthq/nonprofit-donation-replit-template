@@ -1,0 +1,95 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";
+
+@theme inline {
+  --color-background: hsl(var(--surface));
+  --color-foreground: hsl(var(--text));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--border));
+  --color-ring: hsl(var(--primary));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-surface: hsl(var(--surface));
+  --color-surface-muted: hsl(var(--surface-muted));
+
+  --color-muted: hsl(var(--surface-muted));
+  --color-muted-foreground: hsl(var(--text-muted));
+
+  --color-card: hsl(var(--surface));
+  --color-card-foreground: hsl(var(--text));
+
+  --font-sans: var(--site-font-body);
+  --font-heading: var(--site-font-heading);
+
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+}
+
+/*
+ * The HSL custom properties below are placeholders. They are overwritten
+ * at runtime in src/main.tsx based on the values in site.config.ts so
+ * that cloners can re-theme the entire site by editing one file.
+ */
+:root {
+  --primary: 176 64% 26%;
+  --primary-foreground: 40 40% 98%;
+  --accent: 32 92% 52%;
+  --accent-foreground: 30 60% 12%;
+  --surface: 40 40% 99%;
+  --surface-muted: 40 30% 96%;
+  --text: 200 22% 12%;
+  --text-muted: 200 12% 38%;
+  --border: 200 16% 88%;
+
+  --site-font-body: "Inter", system-ui, -apple-system, sans-serif;
+  --site-font-heading: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: hsl(var(--surface));
+    color: hsl(var(--text));
+    font-family: var(--site-font-body);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--site-font-heading);
+    color: hsl(var(--text));
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  /* Skip-to-content link */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    padding: 0.75rem 1rem;
+    z-index: 100;
+    border-radius: 0 0 0.5rem 0;
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    left: 0;
+  }
+}
