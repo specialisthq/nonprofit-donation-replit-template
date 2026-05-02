@@ -1948,7 +1948,7 @@ export const site: SiteConfig = {
             id: "right-9",
             heading: "IX. To have the opportunity to have your name deleted from mailing lists",
             body: [
-              "You have the right to have the opportunity for your names to be deleted from mailing lists that an organization may intend to share.",
+              "You have the right to have the opportunity for your name to be deleted from mailing lists that an organization may intend to share.",
               "In plain language: we never sell or rent donor information. You can ask us at any time to remove your name from any list we keep, including our newsletter and direct-mail program.",
             ],
           },
