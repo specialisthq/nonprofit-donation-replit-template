@@ -1,34 +1,29 @@
-import { Switch, Route, Router as WouterRouter } from "wouter";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SiteLayout } from "@/components/site-layout";
 import { LandingPlaceholder } from "@/pages/landing-placeholder";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
-function Router() {
-  return (
-    <Switch>
-      <Route path="/" component={LandingPlaceholder} />
-      <Route path="/thank-you">{() => <StubPage title="Thank you" />}</Route>
-      <Route path="/about">{() => <StubPage title="About" />}</Route>
-      <Route path="/impact">{() => <StubPage title="Our impact" />}</Route>
-      <Route path="/transparency">{() => <StubPage title="Transparency" />}</Route>
-      <Route path="/contact">{() => <StubPage title="Contact" />}</Route>
-      <Route path="/privacy">{() => <StubPage title="Privacy policy" />}</Route>
-      <Route path="/terms">{() => <StubPage title="Terms of use" />}</Route>
-      <Route path="/refund-policy">{() => <StubPage title="Refund / correction policy" />}</Route>
-      <Route path="/donor-bill-of-rights">{() => <StubPage title="Donor bill of rights" />}</Route>
-      <Route component={NotFound} />
-    </Switch>
-  );
-}
-
 function App() {
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, "");
   return (
-    <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+    <BrowserRouter basename={basename || "/"}>
       <SiteLayout>
-        <Router />
+        <Routes>
+          <Route path="/" element={<LandingPlaceholder />} />
+          <Route path="/thank-you" element={<StubPage title="Thank you" />} />
+          <Route path="/about" element={<StubPage title="About" />} />
+          <Route path="/impact" element={<StubPage title="Our impact" />} />
+          <Route path="/transparency" element={<StubPage title="Transparency" />} />
+          <Route path="/contact" element={<StubPage title="Contact" />} />
+          <Route path="/privacy" element={<StubPage title="Privacy policy" />} />
+          <Route path="/terms" element={<StubPage title="Terms of use" />} />
+          <Route path="/refund-policy" element={<StubPage title="Refund / correction policy" />} />
+          <Route path="/donor-bill-of-rights" element={<StubPage title="Donor bill of rights" />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </SiteLayout>
-    </WouterRouter>
+    </BrowserRouter>
   );
 }
 

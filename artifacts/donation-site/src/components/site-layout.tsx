@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Link, useLocation } from "wouter";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X, ShieldCheck } from "lucide-react";
 import site from "@config";
 import { Container } from "@/components/primitives";
@@ -40,30 +40,50 @@ function TrustBar() {
   );
 }
 
+function Logo() {
+  const { logoPath } = site.branding;
+  // Use the configured logo if present; fall back to a styled letter mark
+  // so the template still looks complete before a cloner adds their logo.
+  const [broken, setBroken] = useState(false);
+  if (logoPath && !broken) {
+    return (
+      <img
+        src={logoPath}
+        alt={`${site.org.name} logo`}
+        className="h-9 w-auto"
+        onError={() => setBroken(true)}
+      />
+    );
+  }
+  return (
+    <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] text-sm font-bold">
+      {site.org.shortName.charAt(0)}
+    </span>
+  );
+}
+
 function Header() {
   const [open, setOpen] = useState(false);
-  const [location] = useLocation();
+  const { pathname } = useLocation();
   return (
     <header className="sticky top-0 z-40 border-b border-[hsl(var(--border))] bg-[hsl(var(--surface))]/95 backdrop-blur supports-[backdrop-filter]:bg-[hsl(var(--surface))]/80">
       <Container className="flex h-16 items-center justify-between gap-4">
         <Link
-          href="/"
+          to="/"
           className="flex items-center gap-2 font-bold text-lg text-[hsl(var(--primary))]"
         >
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] text-sm">
-            {site.org.shortName.charAt(0)}
-          </span>
+          <Logo />
           <span>{site.org.shortName}</span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6">
+        <nav className="hidden md:flex items-center gap-6" aria-label="Primary">
           {NAV_LINKS.map((link) => (
             <Link
               key={link.href}
-              href={link.href}
+              to={link.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-[hsl(var(--primary))]",
-                location === link.href
+                pathname === link.href
                   ? "text-[hsl(var(--primary))]"
                   : "text-[hsl(var(--text))]",
               )}
@@ -92,7 +112,7 @@ function Header() {
             {NAV_LINKS.map((link) => (
               <Link
                 key={link.href}
-                href={link.href}
+                to={link.href}
                 onClick={() => setOpen(false)}
                 className="rounded-md px-3 py-3 text-base font-medium text-[hsl(var(--text))] hover:bg-[hsl(var(--surface-muted))]"
               >
@@ -116,7 +136,29 @@ function Header() {
 }
 
 function Footer() {
-  const { org, social } = site;
+  const { org, social, copy } = site;
+  const transparency = copy.transparency;
+  const financialLinks: { label: string; href: string; external?: boolean }[] = [
+    { label: "Transparency", href: "/transparency" },
+  ];
+  if (transparency.annualReportUrl) {
+    financialLinks.push({
+      label: "Annual report",
+      href: transparency.annualReportUrl,
+      external: true,
+    });
+  }
+  if (transparency.form990Url) {
+    financialLinks.push({
+      label: "IRS Form 990",
+      href: transparency.form990Url,
+      external: true,
+    });
+  }
+  for (const rating of transparency.ratings ?? []) {
+    financialLinks.push({ label: rating.name, href: rating.url, external: true });
+  }
+
   return (
     <footer className="border-t border-[hsl(var(--border))] bg-[hsl(var(--surface-muted))] py-12 text-sm">
       <Container className="grid gap-10 md:grid-cols-4">
@@ -138,7 +180,7 @@ function Footer() {
           <ul className="space-y-2">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                <Link to={link.href} className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
                   {link.label}
                 </Link>
               </li>
@@ -147,11 +189,32 @@ function Footer() {
         </div>
 
         <div>
-          <h4 className="font-semibold text-[hsl(var(--text))] mb-3">Legal</h4>
+          <h4 className="font-semibold text-[hsl(var(--text))] mb-3">Financials</h4>
+          <ul className="space-y-2">
+            {financialLinks.map((l) => (
+              <li key={l.label}>
+                {l.external ? (
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]"
+                  >
+                    {l.label}
+                  </a>
+                ) : (
+                  <Link to={l.href} className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                    {l.label}
+                  </Link>
+                )}
+              </li>
+            ))}
+          </ul>
+          <h4 className="font-semibold text-[hsl(var(--text))] mt-6 mb-3">Legal</h4>
           <ul className="space-y-2">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                <Link to={link.href} className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
                   {link.label}
                 </Link>
               </li>
