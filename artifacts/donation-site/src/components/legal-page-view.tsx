@@ -97,13 +97,13 @@ export function LegalPageView({
               )}
               {s.links && s.links.length > 0 && (
                 <ul data-testid={`${prefix}-section-${s.id}-links`}>
-                  {s.links.map((link) => {
+                  {s.links.map((link, i) => {
                     const href = fill(link.href);
                     const label = fill(link.label);
                     const isInternalRoute =
                       !link.external && href.startsWith("/");
                     return (
-                      <li key={href}>
+                      <li key={`${i}-${href}`}>
                         {isInternalRoute ? (
                           <Link to={href}>{label}</Link>
                         ) : (
