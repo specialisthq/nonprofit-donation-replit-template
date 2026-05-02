@@ -129,6 +129,14 @@ export type SiteConfig = {
     };
     contactEmail: string;
     phone?: string;
+    /**
+     * Optional canonical, public-facing URL of the site (no trailing slash),
+     * e.g. "https://give.brightwell.org". Used for social share intents on
+     * the thank-you page so links work correctly when shared from a custom
+     * domain, staging URL, or anywhere window.location is misleading.
+     * Falls back to window.location.origin + BASE_URL when omitted.
+     */
+    siteUrl?: string;
   };
 
   paypal: {
@@ -354,6 +362,11 @@ export const site: SiteConfig = {
     },
     contactEmail: "hello@example.org",
     phone: "(555) 123-4567",
+    // Set this to your live, public-facing URL (no trailing slash) so the
+    // thank-you page's share links point at the right place when shared
+    // from a custom domain. Leave undefined to fall back to the browser's
+    // current origin + BASE_URL.
+    siteUrl: undefined,
   },
 
   paypal: {

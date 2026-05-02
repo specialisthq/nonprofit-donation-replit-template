@@ -9,6 +9,7 @@ import {
   DONATE_ANCHOR_ID,
   GIVE_MONTHLY,
   GIVE_PARAM,
+  landingShareUrl,
   monthlyUpgradeHref,
 } from "@/lib/donation-flow";
 
@@ -245,6 +246,33 @@ describe("Thank-you page — what happens next", () => {
       ).toBeInTheDocument();
       expect(screen.getByText(step.body)).toBeInTheDocument();
     }
+  });
+});
+
+describe("landingShareUrl() — canonical URL preference", () => {
+  it("prefers site.org.siteUrl from config when set (custom domain / staging support)", () => {
+    const original = site.org.siteUrl;
+    site.org.siteUrl = "https://give.example.org";
+    try {
+      expect(landingShareUrl()).toBe("https://give.example.org/");
+    } finally {
+      site.org.siteUrl = original;
+    }
+  });
+
+  it("normalizes trailing slashes on the configured siteUrl", () => {
+    const original = site.org.siteUrl;
+    site.org.siteUrl = "https://give.example.org/";
+    try {
+      expect(landingShareUrl()).toBe("https://give.example.org/");
+    } finally {
+      site.org.siteUrl = original;
+    }
+  });
+
+  it("falls back to window.location.origin when no canonical URL is configured", () => {
+    expect(site.org.siteUrl).toBeFalsy();
+    expect(landingShareUrl()).toContain(window.location.origin);
   });
 });
 

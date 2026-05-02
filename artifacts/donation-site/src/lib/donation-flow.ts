@@ -32,12 +32,21 @@ export function monthlyUpgradeHref(): string {
 
 /**
  * Best-effort absolute URL of the public-facing landing page, used by social
- * share intents (Twitter / Facebook / LinkedIn) and the Web Share API. Falls
- * back to "/" when there is no DOM (e.g. during a unit-test snapshot).
+ * share intents (Twitter / Facebook / LinkedIn) and the Web Share API.
+ *
+ * Resolution order:
+ *   1. `site.org.siteUrl` from config (canonical, set by the cloner — works
+ *      even when the page is shared from a staging URL, an iframe, or any
+ *      context where window.location is misleading).
+ *   2. window.location.origin + BASE_URL when running in a browser.
+ *   3. "/" as a final fallback (e.g. during a unit-test snapshot).
  */
 export function landingShareUrl(): string {
+  const configured = site.org.siteUrl?.trim();
+  if (configured) {
+    return configured.endsWith("/") ? configured : `${configured}/`;
+  }
   if (typeof window === "undefined") return "/";
-  // Strip any trailing slash on origin + ensure exactly one between origin and base.
   const base = (
     (typeof import.meta !== "undefined" && import.meta.env?.BASE_URL) || "/"
   ) as string;
