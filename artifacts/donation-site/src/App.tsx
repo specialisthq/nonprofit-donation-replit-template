@@ -6,6 +6,7 @@ import { AboutPage } from "@/pages/about";
 import { ImpactPage } from "@/pages/impact";
 import { TransparencyPage } from "@/pages/transparency";
 import { ContactPage } from "@/pages/contact";
+import { PrivacyPage } from "@/pages/privacy";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -32,7 +33,7 @@ function App() {
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/transparency" element={<TransparencyPage />} />
           <Route path="/contact" element={<ContactPage />} />
-          <Route path="/privacy" element={<StubPage title="Privacy policy" />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/terms" element={<StubPage title="Terms of use" />} />
           <Route path="/refund-policy" element={<StubPage title="Refund / correction policy" />} />
           <Route path="/donor-bill-of-rights" element={<StubPage title="Donor bill of rights" />} />

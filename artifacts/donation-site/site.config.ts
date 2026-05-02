@@ -110,6 +110,31 @@ export type FinalCta = {
   ctaLabel: string;
 };
 
+/**
+ * Shared shape for every long-form legal page (privacy, terms,
+ * refund, donor bill of rights). Sections render in order.
+ */
+export type LegalPageCopy = {
+  title: string;
+  /**
+   * Free-form last-updated label, e.g. "September 15, 2025". Pass
+   * the string verbatim so cloners can use any date format their
+   * jurisdiction expects.
+   */
+  lastUpdated: string;
+  /** 1–2 sentence opener shown above the first section. */
+  intro: string;
+  sections: {
+    /** URL-safe slug used as a heading anchor, e.g. "what-we-collect". */
+    id: string;
+    heading: string;
+    /** One paragraph per array entry. */
+    body: string[];
+    /** Optional bulleted list rendered after the paragraphs. */
+    bullets?: string[];
+  }[];
+};
+
 export type SiteConfig = {
   org: {
     name: string;
@@ -671,6 +696,22 @@ export type SiteConfig = {
         timezone?: string;
         items: { day: string; hours: string }[];
       };
+    };
+    /**
+     * Long-form legal pages (privacy / terms / refund / donor bill of
+     * rights). All four pages share the same `disclaimer` banner so
+     * editing it once updates every page.
+     */
+    legal: {
+      /**
+       * Visible "this is a starter template — get your own counsel"
+       * banner shown at the top of every legal page.
+       */
+      disclaimer: {
+        heading: string;
+        body: string;
+      };
+      privacy: LegalPageCopy;
     };
   };
 
@@ -1448,6 +1489,131 @@ export const site: SiteConfig = {
           { day: "Monday – Friday", hours: "9:00 AM – 5:00 PM" },
           { day: "Saturday", hours: "By appointment" },
           { day: "Sunday", hours: "Closed" },
+        ],
+      },
+    },
+
+    legal: {
+      disclaimer: {
+        heading: "This is a starter template — not legal advice.",
+        body:
+          "These policies are a sensible starting point for a small US-based 501(c)(3), but every nonprofit's situation is different. Before you publish this site, have your own legal counsel review and tailor every legal page (privacy, terms, refund, donor bill of rights) to your jurisdiction, programs, and data practices.",
+      },
+      privacy: {
+        title: "Privacy Policy",
+        lastUpdated: "September 15, 2025",
+        intro:
+          "Brightwell Community Fund respects your privacy. This policy explains what information we collect when you visit our site or make a donation, how we use it, who we share it with, and the choices you have. If anything here is unclear, please reach out — we're happy to walk through it with you.",
+        sections: [
+          {
+            id: "scope",
+            heading: "1. Scope of this policy",
+            body: [
+              "This Privacy Policy applies to information we collect through this website, our donation forms, our contact form, and any email lists you opt into. It does not cover information collected by third parties we link to (such as PayPal, the news outlets we cite, or social media platforms) — those services have their own privacy policies, which we encourage you to read.",
+            ],
+          },
+          {
+            id: "what-we-collect",
+            heading: "2. Information we collect",
+            body: [
+              "We collect only the information we need to process your donation, respond to your message, and keep this site running. Specifically:",
+            ],
+            bullets: [
+              "Donation information: When you donate, PayPal collects your name, billing address, email, and payment details. PayPal shares your name, email, and donation amount with us so we can send a receipt and acknowledge your gift. We do not see or store your full payment card or bank details.",
+              "Contact form submissions: If you write to us through the contact form, the form opens your own email app — your message goes directly to us at the email address listed on the contact page. We don't store anything from the form itself.",
+              "Email subscriptions: If you join our newsletter, we collect your name and email address. You can unsubscribe at any time using the link at the bottom of every email.",
+              "Website analytics: We use privacy-respecting analytics to count visitors and understand which pages are most useful. This data is aggregated and does not identify you personally.",
+            ],
+          },
+          {
+            id: "how-we-use",
+            heading: "3. How we use your information",
+            body: [
+              "We use the information we collect to process and acknowledge your donation, send you tax receipts and year-end summaries, respond to your questions, send the newsletter you signed up for, comply with our legal and reporting obligations as a 501(c)(3) public charity, and improve how this website serves donors and program participants.",
+              "We will never use your information to make decisions about your eligibility for our programs. Donor records and program records are kept strictly separate.",
+            ],
+          },
+          {
+            id: "what-we-share",
+            heading: "4. What we share — and what we never share",
+            body: [
+              "We share donor information only with the small set of service providers we need to operate, and only with what they need to do their job:",
+            ],
+            bullets: [
+              "PayPal, our payment processor, to process your donation.",
+              "Our email service provider (e.g. Mailchimp), to send receipts and our newsletter.",
+              "Our accounting and audit firm, to prepare our IRS Form 990 and annual audit.",
+              "Government agencies, when required by law (such as IRS reporting for large gifts).",
+            ],
+          },
+          {
+            id: "what-we-never-share",
+            heading: "5. What we never share",
+            body: [
+              "We never sell, rent, lease, or trade donor information. We do not share your name or contact details with other nonprofits or fundraising lists. If we ever recognize donors publicly (in an annual report, for example), we ask permission first or use anonymized listings.",
+            ],
+          },
+          {
+            id: "cookies",
+            heading: "6. Cookies & analytics",
+            body: [
+              "This site uses a small number of cookies to remember your preferences (such as accessibility settings) and to power our analytics. You can disable cookies in your browser at any time — the donation flow will still work, but some convenience features may not.",
+              "If you'd prefer to opt out of analytics entirely, most browsers offer a \"Do Not Track\" or anti-tracking setting that we honor.",
+            ],
+          },
+          {
+            id: "retention",
+            heading: "7. How long we keep information",
+            body: [
+              "We keep donor records for as long as required by US tax law and our auditors — typically seven years for financial records. Newsletter subscribers are kept on the list until they unsubscribe. Contact form messages are kept in our email archive for as long as we may need them to follow up.",
+              "If you'd like us to delete your information sooner — for example, if you've unsubscribed and want your record removed — email us and we'll do so within 30 days, except where we're legally required to retain it.",
+            ],
+          },
+          {
+            id: "security",
+            heading: "8. How we protect information",
+            body: [
+              "We take reasonable steps to protect the information we hold. Our website is served over HTTPS. Donor records are stored in access-controlled systems and reviewed periodically. We train our staff and volunteers on basic security hygiene.",
+              "No system is perfectly secure, however. If we ever discover a breach affecting your personal information, we will notify you and the appropriate authorities promptly, as required by law.",
+            ],
+          },
+          {
+            id: "your-rights",
+            heading: "9. Your rights as a donor",
+            body: [
+              "You have the right to know what personal information we hold about you, to correct it if it's wrong, to request that we delete it (subject to our legal record-keeping obligations), to opt out of any communications you've signed up for, and to request a copy of your donation history at any time.",
+              "To exercise any of these rights, email us — we'll respond within 30 days. We may need to verify your identity before sharing or changing records, to protect you from impersonation.",
+            ],
+          },
+          {
+            id: "children",
+            heading: "10. Children's privacy",
+            body: [
+              "Our website and programs are intended for adults. We do not knowingly collect personal information from children under 13. If you believe a child has submitted information to us, please contact us and we will delete it promptly.",
+            ],
+          },
+          {
+            id: "international",
+            heading: "11. International donors",
+            body: [
+              "Brightwell Community Fund is based in the United States and our website is hosted in the United States. If you donate or contact us from outside the US, your information will be transferred to and processed in the US, which may have different privacy protections than your home country. By using this site, you consent to that transfer.",
+              "If you're a resident of the EU, UK, or another jurisdiction with specific privacy laws (GDPR, UK GDPR, etc.), you may have additional rights — please email us and we'll work with you to honor them.",
+            ],
+          },
+          {
+            id: "changes",
+            heading: "12. Changes to this policy",
+            body: [
+              "We may update this policy from time to time as our practices evolve or as the law requires. When we do, we will update the \"Last updated\" date at the top of the page. For material changes, we will also post a notice on the homepage and (where we have your email) email subscribers and recent donors.",
+            ],
+          },
+          {
+            id: "contact",
+            heading: "13. How to contact us",
+            body: [
+              "If you have any questions about this policy or about how we handle your information, please reach out — we're real people and we'd rather over-explain than leave you guessing.",
+            ],
+          },
         ],
       },
     },

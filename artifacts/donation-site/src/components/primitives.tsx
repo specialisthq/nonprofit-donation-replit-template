@@ -30,9 +30,9 @@ export function Heading({
   level = 2,
   className,
   children,
-}: {
+  ...props
+}: HTMLAttributes<HTMLHeadingElement> & {
   level?: 1 | 2 | 3 | 4;
-  className?: string;
   children: ReactNode;
 }) {
   const Tag = `h${level}` as "h1" | "h2" | "h3" | "h4";
@@ -42,7 +42,7 @@ export function Heading({
     3: "text-2xl sm:text-3xl font-semibold",
     4: "text-xl font-semibold",
   }[level];
-  return <Tag className={cn(sizes, className)}>{children}</Tag>;
+  return <Tag className={cn(sizes, className)} {...props}>{children}</Tag>;
 }
 
 export function Prose({ className, children }: { className?: string; children: ReactNode }) {
