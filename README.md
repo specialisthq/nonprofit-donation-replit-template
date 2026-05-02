@@ -235,6 +235,21 @@ This template is deployed via **Replit Deployments**:
 
 ---
 
+## QA pass summary (template release)
+
+Before this template was published, the following checks were run against the demo content:
+
+- **Build**: `pnpm run build` succeeds. Production bundle ~411 KB JS / 61 KB CSS, no TypeScript errors, no console errors in the production preview.
+- **Tests**: 186 Vitest tests across 10 files pass, covering the donation module, FAQ, sticky CTA, PayPal URL builder, and every page (landing, thank-you, transparency, contact, privacy, terms, refund policy, donor bill of rights).
+- **Hardcoded-content audit**: no org name, EIN, brand color, or other config-able value is hardcoded in any component or page — every visible value resolves through `site.config.ts`. Verified via repo-wide search.
+- **Config-swap test**: changing `org.name` and `branding.colors.primary` propagates everywhere with no leakage.
+- **Responsive layout**: landing, donor bill of rights, transparency, contact, and thank-you pages render correctly at 375 px (mobile), 768 px (tablet), and 1280 px (desktop) without horizontal scroll.
+- **Navigation**: every header, footer, and inline link works. The deep-link from the impact page (`?amount=NN&mode=oneTime|monthly`) preselects the right amount on landing. The thank-you page's monthly upsell deep-links to landing in monthly mode.
+- **Accessibility spot-check**: keyboard navigation through the donation flow and contact form works, focus rings are visible, accordion uses Radix `aria-` attributes, color contrast is WCAG AA on text and buttons.
+- **Donation flow integration**: amount selection updates the CTA label, click opens the PayPal URL with the correct amount and target, and the manual `/thank-you` route renders the post-donation page.
+
+Re-run these checks after you customize `site.config.ts` to confirm nothing in your content broke a layout assumption.
+
 ## License
 
 MIT — use this template for any nonprofit purpose, commercial or otherwise. Attribution appreciated but not required.
