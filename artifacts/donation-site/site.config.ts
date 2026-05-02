@@ -578,8 +578,99 @@ export type SiteConfig = {
       };
     };
     contact: {
-      headline: string;
-      intro: string;
+      hero: {
+        eyebrow: string;
+        headline: string;
+        subhead: string;
+      };
+      /**
+       * "How to reach us" card. Email, phone, and address are pulled
+       * from `site.org` (single source of truth) — these fields are
+       * just the surrounding labels and the response-time promise.
+       */
+      methods: {
+        eyebrow: string;
+        headline: string;
+        /** Plain-language response promise, e.g. "We reply within two business days." */
+        responseTime: string;
+        emailLabel: string;
+        phoneLabel: string;
+        addressLabel: string;
+      };
+      /**
+       * Concrete reasons donors and supporters reach out. Each reason
+       * has a stable `id` (used as a deep-link anchor on the page and
+       * as the subject value sent to the email client), a short
+       * `topic` label, and a 1–2 sentence body.
+       */
+      reasons: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: {
+          /** URL-safe slug, e.g. "stock-daf". Used as anchor + subject value. */
+          id: string;
+          topic: string;
+          body: string;
+        }[];
+      };
+      /**
+       * Mailto-based contact form. No backend, no third-party network
+       * calls. Submitting opens the donor's email client with the
+       * subject and body prefilled; the message goes to
+       * `site.org.contactEmail`.
+       *
+       * To wire a real form (Formspree, Tally, Typeform, etc.), set
+       * `embedSlot.enabled = true` and follow the EMBED_SLOT comment
+       * in /src/pages/contact.tsx — the schema and labels stay the
+       * same.
+       */
+      form: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        nameLabel: string;
+        emailLabel: string;
+        subjectLabel: string;
+        /** Label for the always-present "Other / general question" subject option. */
+        generalSubjectLabel: string;
+        messageLabel: string;
+        submitLabel: string;
+        /** Success state shown after a valid submit triggers the email client. */
+        successHeadline: string;
+        successBody: string;
+        successCtaLabel: string;
+        /** Inline validation messages. */
+        errors: {
+          nameRequired: string;
+          emailRequired: string;
+          emailInvalid: string;
+          messageRequired: string;
+        };
+      };
+      /**
+       * Cloner-facing slot for swapping the mailto form for a real
+       * embedded form (Formspree, Tally, Typeform, etc.). When
+       * `enabled` is true, the page hides the mailto form and shows
+       * a clearly marked card with instructions for dropping in your
+       * `<iframe>` or `<script>` snippet.
+       */
+      embedSlot: {
+        headline: string;
+        body: string;
+        enabled: boolean;
+      };
+      /**
+       * Optional office hours / availability block. Set to undefined
+       * or give an empty `items` array to hide the section.
+       */
+      hours?: {
+        eyebrow: string;
+        headline: string;
+        /** Optional. When omitted, the timezone footnote is hidden. */
+        timezone?: string;
+        items: { day: string; hours: string }[];
+      };
     };
   };
 
@@ -1257,9 +1348,108 @@ export const site: SiteConfig = {
       },
     },
     contact: {
-      headline: "Get in touch.",
-      intro:
-        "Questions about your donation, our programs, or how to get involved? We read every message.",
+      hero: {
+        eyebrow: "We're here to help",
+        headline: "Get in touch.",
+        subhead:
+          "Questions about your donation, our programs, or how to give in a different way? We read every message and respond within two business days — often within a few hours.",
+      },
+      methods: {
+        eyebrow: "How to reach us",
+        headline: "Pick whatever's easiest for you.",
+        responseTime:
+          "We respond to every message within two business days, often within a few hours.",
+        emailLabel: "Email",
+        phoneLabel: "Phone",
+        addressLabel: "Mailing address",
+      },
+      reasons: {
+        eyebrow: "Common reasons donors reach out",
+        headline: "We can help with all of these.",
+        subhead:
+          "Pick a topic from the dropdown in the form below — or just write us in your own words.",
+        items: [
+          {
+            id: "stock-daf",
+            topic: "Donate stock or from a Donor-Advised Fund",
+            body: "Want to give appreciated stock or recommend a grant from a DAF (Fidelity Charitable, Schwab, Vanguard, etc.)? We'll send you our brokerage details and grant-letter language.",
+          },
+          {
+            id: "check",
+            topic: "Donate by check",
+            body: "Prefer to give by check? Mail it to the address above — we'll send you a confirmation receipt within five business days of receipt.",
+          },
+          {
+            id: "crypto",
+            topic: "Donate cryptocurrency",
+            body: "We accept Bitcoin, Ethereum, and other major cryptocurrencies through The Giving Block. Email us and we'll send you the donation link.",
+          },
+          {
+            id: "employer-match",
+            topic: "Match your gift through your employer",
+            body: "Thousands of employers will double or triple your donation. Send us your employer's matching-gift form and we'll handle the paperwork on our side.",
+          },
+          {
+            id: "tribute",
+            topic: "Make a tribute or memorial gift",
+            body: "Honor someone special with a gift in their name. We'll send a thoughtful acknowledgment card to the recipient or family — just let us know who and where to send it.",
+          },
+          {
+            id: "recurring",
+            topic: "Pause, change, or cancel a monthly gift",
+            body: "You can manage monthly gifts directly in your PayPal account, or email us and we'll take care of it within one business day.",
+          },
+          {
+            id: "receipt",
+            topic: "Receipt or tax-letter question",
+            body: "Lost your receipt, need a year-end summary, or have a tax-deductibility question? Tell us your name and donation date — we'll resend a corrected receipt the same day.",
+          },
+          {
+            id: "press",
+            topic: "Press, partnership, or speaking inquiry",
+            body: "Reporters, partners, and event organizers — please include your outlet or organization, deadline, and topic. Our communications lead will reply within one business day.",
+          },
+        ],
+      },
+      form: {
+        eyebrow: "Send us a message",
+        headline: "Tell us how we can help.",
+        subhead:
+          "Filling this out opens your email app with the message pre-filled. We don't store anything from this form.",
+        nameLabel: "Your name",
+        emailLabel: "Your email",
+        subjectLabel: "Topic",
+        generalSubjectLabel: "Other / general question",
+        messageLabel: "Message",
+        submitLabel: "Open my email app",
+        successHeadline: "Your email is ready to send.",
+        successBody:
+          "We opened your email app with the message pre-filled. If nothing happened, your browser may have blocked the mailto link — click below to try again.",
+        successCtaLabel: "Open the message again",
+        errors: {
+          nameRequired: "Please tell us your name so we know who to reply to.",
+          emailRequired: "We need your email to send a reply.",
+          emailInvalid: "That email address doesn't look quite right.",
+          messageRequired:
+            "Please write a short message so we know how to help.",
+        },
+      },
+      embedSlot: {
+        headline: "Have a real form? Drop it in here.",
+        body:
+          "By default this page uses a mailto form so it works without a backend. To collect submissions in a database, set `embedSlot.enabled = true` and replace this card with a Formspree, Tally, Typeform, or similar embed — search for the EMBED_SLOT comment in /src/pages/contact.tsx.",
+        enabled: false,
+      },
+      hours: {
+        eyebrow: "Office hours",
+        headline: "When we're at our desks.",
+        timezone: "All times Central Time (US)",
+        items: [
+          { day: "Monday – Friday", hours: "9:00 AM – 5:00 PM" },
+          { day: "Saturday", hours: "By appointment" },
+          { day: "Sunday", hours: "Closed" },
+        ],
+      },
     },
   },
 
