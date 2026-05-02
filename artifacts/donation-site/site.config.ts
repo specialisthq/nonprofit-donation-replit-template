@@ -210,8 +210,88 @@ export type SiteConfig = {
     };
     thankYou: {
       headline: string;
+      /** Warm body paragraph(s) shown directly under the thank-you headline. */
       body: string;
+      /**
+       * Microcopy reassuring the donor that PayPal has emailed their receipt.
+       * Shown right under the body. Should mention checking spam + how to
+       * reach you if it doesn't arrive.
+       */
+      receiptNote: string;
+      /** Plain-text message used by the share row (Web Share + social fallbacks). */
       shareText: string;
+      /**
+       * Optional embed URL for a short thank-you video (YouTube/Vimeo embed
+       * URL, or a direct .mp4 path under /public). Hidden when empty.
+       */
+      videoUrl?: string;
+      /** Card inviting one-time donors to upgrade to a monthly gift. */
+      monthlyUpgrade: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        ctaLabel: string;
+      };
+      /**
+       * Optional employer-match prompt. The card is hidden entirely when
+       * `employerMatch` is omitted. Cloners can either link out to a public
+       * matching-gift database (e.g. Double the Donation) or to their own
+       * /contact page if they handle matches manually.
+       */
+      employerMatch?: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        ctaLabel: string;
+        /** Internal route (e.g. "/contact") or external URL. */
+        href: string;
+        /** True for an external URL; opens in a new tab. */
+        external?: boolean;
+      };
+      /** Section showing one or two impact reminder tiers. */
+      impactReminder: {
+        eyebrow: string;
+        headline: string;
+        /**
+         * Up to two impact tiers. If omitted, the page falls back to the
+         * first 1–2 of `amounts.oneTime` with their `impactLabel`.
+         */
+        tiers?: { amount: number; impactLabel: string }[];
+      };
+      /** "What happens next" reassurance steps. */
+      whatHappensNext: {
+        eyebrow: string;
+        headline: string;
+        steps: { title: string; body: string }[];
+      };
+      /**
+       * Newsletter opt-in placeholder. The body of the page renders an
+       * inline placeholder UI styled like the rest of the site; the cloner
+       * pastes their Mailchimp/Beehiiv/etc. embed where the placeholder is.
+       */
+      newsletter: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        /** Placeholder text on the disabled email input. */
+        emailPlaceholder: string;
+        /** Disabled CTA label on the placeholder form. */
+        ctaLabel: string;
+      };
+      /** Heading + intro for the social-follow row. */
+      socialFollow: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+      };
+      /** Heading + intro for the share row. */
+      share: {
+        eyebrow: string;
+        headline: string;
+        body: string;
+        /** Label of the native Web Share API button. */
+        nativeCtaLabel: string;
+      };
     };
     about: {
       headline: string;
@@ -487,10 +567,88 @@ export const site: SiteConfig = {
       ],
     },
     thankYou: {
-      headline: "Thank you — your gift is on its way.",
-      body: "Your donation will help a family in our community this week. A receipt is on its way to your inbox now.",
+      headline: "Thank you, friend.",
+      body:
+        "Your gift will help a family in our community this week — groceries on the table, kids cared for after school, rent kept current. None of that happens without donors like you.",
+      receiptNote:
+        "If your gift went through, PayPal will email you an itemized receipt within a few minutes. Check your spam folder if you don't see it — or contact us and we'll resend it.",
       shareText:
         "I just gave to Brightwell Community Fund — they help local families with food, housing, and after-school care. Join me:",
+      // Set to a YouTube embed URL (https://www.youtube.com/embed/XYZ), a
+      // Vimeo embed URL, or a direct /video.mp4 path to surface a thank-you
+      // video at the top of the page. Leave undefined to hide the slot.
+      videoUrl: undefined,
+      monthlyUpgrade: {
+        eyebrow: "Make it ongoing",
+        headline: "Turn your gift into steady support",
+        body:
+          "A small monthly gift gives our team predictable funding to keep families stable year-round — not just in a crisis. You can change or cancel any time.",
+        ctaLabel: "Start a monthly gift",
+      },
+      // Optional employer-match prompt. Most U.S. employers will match
+      // charitable gifts at 1:1 (some at 2:1 or 3:1). Set `href` to a
+      // public matching-gift lookup tool (Double the Donation, etc.) or
+      // to your own /contact page. Delete this block to hide the card.
+      employerMatch: {
+        eyebrow: "Double your impact",
+        headline: "Does your employer match donations?",
+        body:
+          "Many employers will match charitable gifts dollar-for-dollar — sometimes 2x or 3x. It usually takes 5 minutes and can double what you just gave.",
+        ctaLabel: "Check with your employer",
+        href: "/contact",
+      },
+      impactReminder: {
+        eyebrow: "What your gift does",
+        headline: "Here's what you just made possible",
+        // Hand-picked tiers (typically the most impactful 1–2 from the
+        // landing page); omit to fall back to amounts.oneTime[0..1].
+        tiers: [
+          { amount: 50, impactLabel: "Funds one after-school session" },
+          { amount: 100, impactLabel: "Provides emergency rent assistance" },
+        ],
+      },
+      whatHappensNext: {
+        eyebrow: "What happens next",
+        headline: "Here's what you can expect from us",
+        steps: [
+          {
+            title: "Receipt in your inbox",
+            body:
+              "PayPal has already emailed you an itemized receipt for your tax records.",
+          },
+          {
+            title: "Your gift goes to work this week",
+            body:
+              "Public donations fund three programs: emergency groceries, after-school care, and short-term rent assistance.",
+          },
+          {
+            title: "You'll hear from us",
+            body:
+              "We'll send one short impact update next month — never spam, easy to unsubscribe.",
+          },
+        ],
+      },
+      newsletter: {
+        eyebrow: "Stay close to the work",
+        headline: "Get one short update a month",
+        body:
+          "Real stories from the families your donations support — no spam, no ask, just a window into the community you're helping.",
+        emailPlaceholder: "you@example.com",
+        ctaLabel: "Subscribe",
+      },
+      socialFollow: {
+        eyebrow: "Follow along",
+        headline: "Catch the stories between donations",
+        body:
+          "We post a behind-the-scenes story every week. Pick whichever platform you already check.",
+      },
+      share: {
+        eyebrow: "Multiply your gift",
+        headline: "Tell one friend you gave",
+        body:
+          "The fastest way to grow what you just did: invite one person to give too.",
+        nativeCtaLabel: "Share via…",
+      },
     },
     about: {
       headline: "We're neighbors helping neighbors.",

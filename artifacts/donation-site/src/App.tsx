@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SiteLayout } from "@/components/site-layout";
 import { LandingPage } from "@/pages/landing";
+import { ThankYouPage } from "@/pages/thank-you";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -11,7 +12,18 @@ function App() {
       <SiteLayout>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/thank-you" element={<StubPage title="Thank you" />} />
+          {/*
+            CLONER NOTE — PayPal "Return URL"
+            ---------------------------------
+            Set your PayPal Donate hosted button's Return URL to:
+                https://<your-domain>/thank-you
+            (or, if this site is deployed under a sub-path, prefix it with
+            that path — e.g. https://your-domain.com/donate/thank-you).
+            That makes PayPal redirect donors to /thank-you immediately
+            after a successful gift, and this page is built to render
+            cleanly whether or not PayPal appends query parameters.
+          */}
+          <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/about" element={<StubPage title="About" />} />
           <Route path="/impact" element={<StubPage title="Our impact" />} />
           <Route path="/transparency" element={<StubPage title="Transparency" />} />

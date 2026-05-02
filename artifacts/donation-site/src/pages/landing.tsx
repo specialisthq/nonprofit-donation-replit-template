@@ -1,5 +1,6 @@
-import { useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import { DONATE_ANCHOR_ID, GIVE_MONTHLY, GIVE_PARAM } from "@/lib/donation-flow";
 import {
   Award,
   ChevronRight,
@@ -32,7 +33,9 @@ import { StickyMobileCta } from "@/components/sticky-mobile-cta";
 import { cn } from "@/lib/utils";
 
 const HERO_SENTINEL_ID = "hero-end";
-const DONATE_ANCHOR = "donate";
+// Re-export under a local alias so existing references keep their short name
+// while sourcing from the shared cross-page contract in lib/donation-flow.ts.
+const DONATE_ANCHOR = DONATE_ANCHOR_ID;
 
 const TRUST_STRIP_ICONS = {
   lock: Lock,
@@ -48,7 +51,27 @@ export function LandingPage() {
   const { copy, branding, org } = site;
   const landing = copy.landing;
 
-  const [mode, setMode] = useState<DonationMode>("oneTime");
+  // Cross-page URL contract: `/?give=monthly` (typically arriving from the
+  // thank-you page's monthly-upgrade card) preselects the Monthly tab and
+  // auto-scrolls the donation module into view. See `lib/donation-flow.ts`.
+  const [searchParams] = useSearchParams();
+  const wantsMonthly =
+    searchParams.get(GIVE_PARAM) === GIVE_MONTHLY;
+  const [mode, setMode] = useState<DonationMode>(
+    wantsMonthly ? "monthly" : "oneTime",
+  );
+
+  useEffect(() => {
+    if (!wantsMonthly) return;
+    // Defer one frame so the donation module is mounted before we scroll.
+    const id = requestAnimationFrame(() => {
+      const el = document.getElementById(DONATE_ANCHOR);
+      el?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(id);
+    // Only react to the initial value of the query param.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [oneTimeAmount, setOneTimeAmount] = useState<number | null>(
     findDefault(site.amounts.oneTime),
   );
