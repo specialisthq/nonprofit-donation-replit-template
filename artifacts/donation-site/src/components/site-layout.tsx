@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X, ShieldCheck } from "lucide-react";
+import { Menu, X, ShieldCheck, Facebook, Instagram, Linkedin, Twitter, Youtube } from "lucide-react";
 import site from "@config";
 import { Container } from "@/components/primitives";
 import { ButtonLink } from "@/components/button";
@@ -233,14 +233,36 @@ function Footer() {
             {org.phone && (
               <li className="text-[hsl(var(--text-muted))]">{org.phone}</li>
             )}
-            {Object.entries(social).filter(([, v]) => !!v).map(([k, v]) => (
-              <li key={k}>
-                <a href={v} target="_blank" rel="noopener noreferrer" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))] capitalize">
-                  {k}
-                </a>
-              </li>
-            ))}
           </ul>
+          {Object.values(social).some(Boolean) && (
+            <div className="mt-4 flex items-center gap-3">
+              {social.facebook && (
+                <a href={social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                  <Facebook className="h-5 w-5" />
+                </a>
+              )}
+              {social.instagram && (
+                <a href={social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                  <Instagram className="h-5 w-5" />
+                </a>
+              )}
+              {social.twitter && (
+                <a href={social.twitter} target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                  <Twitter className="h-5 w-5" />
+                </a>
+              )}
+              {social.linkedin && (
+                <a href={social.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                  <Linkedin className="h-5 w-5" />
+                </a>
+              )}
+              {social.youtube && (
+                <a href={social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-[hsl(var(--text-muted))] hover:text-[hsl(var(--primary))]">
+                  <Youtube className="h-5 w-5" />
+                </a>
+              )}
+            </div>
+          )}
         </div>
       </Container>
       <Container className="mt-10 border-t border-[hsl(var(--border))] pt-6 text-xs text-[hsl(var(--text-muted))] flex flex-wrap justify-between gap-2">

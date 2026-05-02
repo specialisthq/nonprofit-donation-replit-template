@@ -92,9 +92,9 @@ export type SiteConfig = {
     supportingImagePaths?: string[];
   };
 
-  typography: {
-    headingFamily: string;
-    bodyFamily: string;
+  typography?: {
+    headingFamily?: string;
+    bodyFamily?: string;
   };
 
   copy: {

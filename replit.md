@@ -10,7 +10,7 @@ A frontend-only pnpm workspace monorepo containing a clonable nonprofit donation
 - **Node.js version**: 24
 - **Package manager**: pnpm
 - **TypeScript version**: 5.9
-- **Frontend**: React + Vite, wouter for routing
+- **Frontend**: React + Vite, `react-router-dom` for routing
 - **Styling**: Tailwind CSS v4, CSS custom properties driven by `site.config.ts`
 - **Payments**: PayPal hosted donation button (cloner-configured, no server-side processing)
 

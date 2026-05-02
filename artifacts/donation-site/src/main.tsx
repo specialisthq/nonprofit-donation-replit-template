@@ -16,8 +16,15 @@ function applyTheme() {
   root.style.setProperty("--text", c.text);
   root.style.setProperty("--text-muted", c.textMuted);
   root.style.setProperty("--border", c.border);
-  root.style.setProperty("--site-font-body", site.typography.bodyFamily);
-  root.style.setProperty("--site-font-heading", site.typography.headingFamily);
+  const defaultStack = `"Inter", system-ui, -apple-system, sans-serif`;
+  root.style.setProperty(
+    "--site-font-body",
+    site.typography?.bodyFamily ?? defaultStack,
+  );
+  root.style.setProperty(
+    "--site-font-heading",
+    site.typography?.headingFamily ?? defaultStack,
+  );
   document.title = site.org.name;
 }
 
