@@ -73,6 +73,17 @@ export type TrustStripItem = {
   linkLabel?: string;
 };
 
+export type CharityRating = {
+  /** Display name, e.g. "Charity Navigator" or "Candid Platinum". */
+  name: string;
+  /** Short rating descriptor, e.g. "Four-Star Charity" or "Platinum Seal 2025". */
+  label: string;
+  /** Public URL of the org's profile on the rating service. */
+  url: string;
+  /** Optional path under /public for a logo image; falls back to text-only badge. */
+  logoPath?: string;
+};
+
 export type DonationModuleCopy = {
   heading: string;
   subhead: string;
@@ -175,6 +186,11 @@ export type SiteConfig = {
       /** Optional one-line donor testimonial shown in the hero trust strip. */
       testimonial?: Testimonial;
       trustStrip: TrustStripItem[];
+      /**
+       * Charity-rating badges (Charity Navigator, Candid, BBB, etc.).
+       * Empty array hides the slot entirely.
+       */
+      charityRatings: CharityRating[];
       /**
        * Three impact metrics anchored beneath the hero. If omitted,
        * the landing page falls back to the first 3 of `impact.metrics`.
@@ -349,6 +365,11 @@ export const site: SiteConfig = {
           linkLabel: "Read our financials",
         },
       ],
+      // Optional charity-rating badges (Charity Navigator, Candid/GuideStar,
+      // BBB Wise Giving, etc.). Leave the array empty to hide the slot
+      // entirely. Each item is rendered as a small linked badge in the
+      // trust strip area beneath the hero.
+      charityRatings: [],
       impactProofHeader: {
         eyebrow: "The numbers behind your gift",
         headline: "Real help, measured honestly.",
@@ -428,29 +449,40 @@ export const site: SiteConfig = {
       },
       faqs: [
         {
+          question: "Where exactly does my money go?",
+          answer:
+            "Public donations fund three programs: emergency groceries, after-school care, and short-term rent assistance. Operating costs are covered separately by a private endowment, so 100% of your public gift reaches programs. See our Impact and Transparency pages for the year-over-year breakdown.",
+        },
+        {
           question: "Is my donation tax-deductible?",
           answer:
-            "Yes. Brightwell Community Fund is a registered 501(c)(3) nonprofit (EIN 00-0000000). Your gift is tax-deductible to the full extent allowed by law, and you'll receive an emailed receipt immediately.",
+            "Yes. Brightwell Community Fund is a registered 501(c)(3) nonprofit (EIN 00-0000000). Your gift is tax-deductible in the U.S. to the full extent allowed by law.",
         },
         {
-          question: "How is my gift used?",
+          question: "Will I get a receipt?",
           answer:
-            "Public donations fund three programs: emergency groceries, after-school care, and short-term rent assistance. Operating costs are covered separately by a private endowment, so 100% of your gift reaches programs.",
+            "Yes — PayPal emails you an itemized receipt the moment your donation processes. You can also forward us your PayPal confirmation any time and we'll re-send a formal acknowledgment letter for your tax records.",
         },
         {
-          question: "Can I cancel my monthly gift?",
+          question: "Can I cancel or change my monthly gift?",
           answer:
-            "Yes — anytime. You can manage or cancel your recurring gift directly from your PayPal account, or email us and we'll take care of it for you.",
+            "Yes, anytime. You can pause, change the amount, or cancel a recurring gift directly from your PayPal account in two clicks — or email us and we'll take care of it for you the same day.",
         },
         {
           question: "Is my payment secure?",
           answer:
-            "Yes. Donations are processed by PayPal using bank-grade encryption. We never see or store your card details.",
+            "Yes. Donations are processed by PayPal using bank-grade encryption. We never see or store your card details on our servers.",
+        },
+        {
+          question:
+            "Can I give by stock, donor-advised fund (DAF), check, or another way?",
+          answer:
+            "Absolutely — we accept gifts of stock, DAF grants, mailed checks, IRA qualified charitable distributions, employer matching gifts, and tribute gifts in honor/memory. Visit our Contact page and we'll walk you through the right paperwork for your situation.",
         },
         {
           question: "Can I give in honor or memory of someone?",
           answer:
-            "Absolutely. Add a note when you donate, and we'll send an acknowledgment to the family on your behalf.",
+            "Yes. Add a note when you donate or contact us directly, and we'll send a written acknowledgment to the honoree's family on your behalf.",
         },
       ],
     },

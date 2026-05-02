@@ -40,6 +40,7 @@ A frontend-only pnpm workspace monorepo containing a clonable nonprofit donation
 - `pnpm install` — install workspace dependencies
 - `pnpm run typecheck` — typecheck all artifacts and scripts
 - `pnpm run build` — typecheck + build all packages
+- `pnpm --filter @workspace/donation-site run test` — run the donation-site Vitest suite (donation module, FAQ, trust strip, sticky CTA, PayPal URL builder)
 
 ## Cloning this template
 

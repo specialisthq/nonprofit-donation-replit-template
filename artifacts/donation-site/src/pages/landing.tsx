@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import site, {
+  type CharityRating,
   type SecondaryGivingCard,
   type SuggestedAmount,
   type TrustStripItem,
@@ -160,7 +161,9 @@ export function LandingPage() {
       </Section>
 
       {/* ============== TRUST STRIP ============== */}
-      {landing.trustStrip.length > 0 && (
+      {(landing.trustStrip.length > 0 ||
+        landing.charityRatings.length > 0 ||
+        landing.testimonial) && (
         <section
           aria-label="Why donors trust us"
           className="border-y border-[hsl(var(--border))] bg-[hsl(var(--surface))]"
@@ -187,6 +190,20 @@ export function LandingPage() {
               </figure>
             )}
           </Container>
+          {landing.charityRatings.length > 0 && (
+            <Container className="pb-6">
+              <ul
+                aria-label="Independent charity ratings"
+                className="flex flex-wrap items-center justify-center gap-3"
+              >
+                {landing.charityRatings.map((rating, i) => (
+                  <li key={i}>
+                    <CharityRatingBadge rating={rating} />
+                  </li>
+                ))}
+              </ul>
+            </Container>
+          )}
         </section>
       )}
 
@@ -422,6 +439,34 @@ export function LandingPage() {
         />
       )}
     </>
+  );
+}
+
+function CharityRatingBadge({ rating }: { rating: CharityRating }) {
+  return (
+    <a
+      href={rating.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 rounded-full border border-[hsl(var(--border))] bg-[hsl(var(--surface))] px-3 py-1.5 text-xs font-medium text-[hsl(var(--text-muted))] hover:border-[hsl(var(--primary))] hover:text-[hsl(var(--primary))] transition-colors"
+    >
+      {rating.logoPath && (
+        <img
+          src={rating.logoPath}
+          alt=""
+          className="h-4 w-4 object-contain"
+          width={16}
+          height={16}
+          loading="lazy"
+          decoding="async"
+        />
+      )}
+      <span className="font-semibold text-[hsl(var(--text))]">
+        {rating.name}
+      </span>
+      <span aria-hidden="true">·</span>
+      <span>{rating.label}</span>
+    </a>
   );
 }
 

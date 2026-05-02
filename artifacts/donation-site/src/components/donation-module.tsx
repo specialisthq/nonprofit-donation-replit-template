@@ -67,9 +67,7 @@ export const DonationModule = forwardRef(function DonationModule(
     ? mode === "monthly"
       ? `Start my ${formattedAmount} monthly gift`
       : `Donate ${formattedAmount} now`
-    : mode === "monthly"
-      ? "Start my monthly gift"
-      : copy.defaultCtaLabel;
+    : copy.defaultCtaLabel;
 
   const linkProps = donateLinkProps({
     amount: effectiveAmount ?? undefined,
@@ -95,11 +93,13 @@ export const DonationModule = forwardRef(function DonationModule(
       </p>
 
       {/* Gift type toggle (binary, two pressed-buttons rather than radiogroup
-          to avoid having to re-implement arrow-key roving radio behavior). */}
+          to avoid having to re-implement arrow-key roving radio behavior).
+          Monthly is visually emphasized in both states (always shows the
+          "Recommended" badge) per the research doc's guidance. */}
       <div
         role="group"
         aria-label="Gift type"
-        className="grid grid-cols-2 gap-1 rounded-full bg-[hsl(var(--surface-muted))] p-1 mb-5"
+        className="relative grid grid-cols-2 gap-1 rounded-full bg-[hsl(var(--surface-muted))] p-1 mb-5"
       >
         {(
           [
@@ -108,6 +108,7 @@ export const DonationModule = forwardRef(function DonationModule(
           ] as const
         ).map((opt) => {
           const active = mode === opt.value;
+          const isMonthly = opt.value === "monthly";
           return (
             <button
               key={opt.value}
@@ -115,21 +116,31 @@ export const DonationModule = forwardRef(function DonationModule(
               aria-pressed={active}
               onClick={() => onModeChange(opt.value)}
               className={cn(
-                "h-11 rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[hsl(var(--primary))]",
+                "relative h-11 rounded-full text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[hsl(var(--primary))]",
                 active
-                  ? "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] shadow-sm"
-                  : "text-[hsl(var(--text-muted))] hover:text-[hsl(var(--text))]",
+                  ? isMonthly
+                    ? "bg-[hsl(var(--accent))] text-[hsl(var(--accent-foreground))] shadow-sm"
+                    : "bg-[hsl(var(--primary))] text-[hsl(var(--primary-foreground))] shadow-sm"
+                  : isMonthly
+                    ? "text-[hsl(var(--accent-foreground))] ring-2 ring-[hsl(var(--accent))]/40 hover:ring-[hsl(var(--accent))]/70"
+                    : "text-[hsl(var(--text-muted))] hover:text-[hsl(var(--text))]",
               )}
             >
-              {opt.label}
-              {opt.value === "monthly" && active && (
-                <span
-                  aria-hidden="true"
-                  className="ml-1 text-[10px] uppercase tracking-wider opacity-90"
-                >
-                  ★
-                </span>
-              )}
+              <span className="inline-flex items-center gap-1">
+                {opt.label}
+                {isMonthly && (
+                  <span
+                    className={cn(
+                      "rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider",
+                      active
+                        ? "bg-[hsl(var(--accent-foreground))]/15 text-[hsl(var(--accent-foreground))]"
+                        : "bg-[hsl(var(--accent))]/15 text-[hsl(var(--accent-foreground))]",
+                    )}
+                  >
+                    ★ Best
+                  </span>
+                )}
+              </span>
             </button>
           );
         })}
