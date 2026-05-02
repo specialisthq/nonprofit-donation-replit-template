@@ -61,6 +61,10 @@ export function StickyMobileCta({ watchSentinelId, scrollToId, label }: Props) {
       <button
         type="button"
         onClick={handleClick}
+        // When the bar is collapsed (off-screen) we remove it from the tab
+        // order so keyboard users don't focus an invisible control.
+        tabIndex={show ? 0 : -1}
+        aria-hidden={!show}
         className="flex w-full min-h-[52px] items-center justify-center gap-2 rounded-full bg-[hsl(var(--primary))] px-6 text-base font-semibold text-[hsl(var(--primary-foreground))] shadow-md hover:opacity-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[hsl(var(--primary))]"
       >
         <Heart className="h-4 w-4" aria-hidden="true" />

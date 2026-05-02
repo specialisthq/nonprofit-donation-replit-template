@@ -299,6 +299,28 @@ describe("StickyMobileCta — scroll visibility behavior", () => {
     });
     expect(bar).toHaveAttribute("aria-hidden", "true");
   });
+
+  it("removes the inner button from the tab order while the bar is hidden, and restores it once visible", () => {
+    mockSentinelTop(200);
+    render(
+      <StickyMobileCta
+        watchSentinelId="test-sentinel"
+        scrollToId="donate"
+        label="Donate now"
+      />,
+    );
+    const bar = screen.getByTestId("sticky-mobile-cta");
+    const btn = within(bar).getByRole("button", { hidden: true });
+    expect(btn).toHaveAttribute("tabindex", "-1");
+    expect(btn).toHaveAttribute("aria-hidden", "true");
+
+    mockSentinelTop(-50);
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+    expect(btn).toHaveAttribute("tabindex", "0");
+    expect(btn).toHaveAttribute("aria-hidden", "false");
+  });
 });
 
 describe("Landing page — mobile hero stacking order (DOM)", () => {
