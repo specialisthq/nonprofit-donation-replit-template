@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
-import { render, screen, within } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { afterEach, describe, expect, it } from "vitest";
+import { act, fireEvent, render, screen, within } from "@testing-library/react";
+import { MemoryRouter, Route, Routes } from "react-router-dom";
 import { PrivacyPage } from "@/pages/privacy";
+import { StubPage } from "@/pages/stub";
 import { SiteLayout } from "@/components/site-layout";
 import { site } from "@/../site.config";
 
@@ -106,4 +107,137 @@ describe("PrivacyPage", () => {
     const main = screen.getByRole("main");
     expect(main.textContent).toContain("PayPal");
   });
+
+  it("renders the contact email in the page header and final section", () => {
+    renderPrivacy();
+    const headerEmail = screen.getByTestId("privacy-header-email");
+    expect(headerEmail).toHaveTextContent(site.org.contactEmail);
+    expect(headerEmail).toHaveAttribute(
+      "href",
+      `mailto:${site.org.contactEmail}`,
+    );
+    const contactEmail = screen.getByTestId("privacy-contact-email");
+    expect(contactEmail).toHaveTextContent(site.org.contactEmail);
+    expect(contactEmail).toHaveAttribute(
+      "href",
+      `mailto:${site.org.contactEmail}`,
+    );
+  });
+
+  it("does not hard-code the org name in policy prose", () => {
+    expect(site.copy.legal.privacy.intro).not.toContain(site.org.name);
+    for (const section of site.copy.legal.privacy.sections) {
+      for (const paragraph of section.body) {
+        expect(paragraph).not.toContain(site.org.name);
+      }
+    }
+  });
+});
+
+describe("Privacy page — route + navigation (E2E-style)", () => {
+  function renderApp(initialPath: string) {
+    return render(
+      <MemoryRouter initialEntries={[initialPath]}>
+        <SiteLayout>
+          <Routes>
+            <Route path="/" element={<div data-testid="home-stub">home</div>} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route
+              path="/terms"
+              element={<StubPage title="Terms of use" legal />}
+            />
+            <Route
+              path="/refund-policy"
+              element={
+                <StubPage title="Refund / correction policy" legal />
+              }
+            />
+            <Route
+              path="/donor-bill-of-rights"
+              element={<StubPage title="Donor bill of rights" legal />}
+            />
+            <Route
+              path="/contact"
+              element={<div data-testid="contact-stub">contact</div>}
+            />
+          </Routes>
+        </SiteLayout>
+      </MemoryRouter>,
+    );
+  }
+
+  it("loads /privacy via the router with the disclaimer visible", () => {
+    renderApp("/privacy");
+    expect(screen.getByTestId("privacy-title")).toBeInTheDocument();
+    expect(screen.getByTestId("legal-disclaimer")).toBeInTheDocument();
+  });
+
+  it("navigates from the footer Privacy link to /privacy", () => {
+    renderApp("/");
+    const privacyLinks = screen
+      .getAllByRole("link", { name: /privacy policy/i })
+      .filter((el) => el.getAttribute("href") === "/privacy");
+    expect(privacyLinks.length).toBeGreaterThan(0);
+    fireEvent.click(privacyLinks[0]);
+    expect(screen.getByTestId("privacy-title")).toBeInTheDocument();
+  });
+
+  it("navigates from /privacy to /contact via the in-text link", () => {
+    renderApp("/privacy");
+    fireEvent.click(screen.getByTestId("privacy-contact-link"));
+    expect(screen.getByTestId("contact-stub")).toBeInTheDocument();
+  });
+
+  it("shares the disclaimer wording across all four legal pages", () => {
+    for (const path of [
+      "/privacy",
+      "/terms",
+      "/refund-policy",
+      "/donor-bill-of-rights",
+    ]) {
+      const { unmount } = renderApp(path);
+      const banner = screen.getByTestId("legal-disclaimer");
+      expect(banner).toHaveTextContent(site.copy.legal.disclaimer.heading);
+      expect(banner).toHaveTextContent(site.copy.legal.disclaimer.body);
+      unmount();
+    }
+  });
+});
+
+describe("Privacy page — responsive viewport smoke", () => {
+  const originalWidth = window.innerWidth;
+  afterEach(() => {
+    Object.defineProperty(window, "innerWidth", {
+      writable: true,
+      configurable: true,
+      value: originalWidth,
+    });
+  });
+
+  for (const width of [375, 768, 1280]) {
+    it(`renders core elements at ${width}px width`, () => {
+      Object.defineProperty(window, "innerWidth", {
+        writable: true,
+        configurable: true,
+        value: width,
+      });
+      act(() => {
+        window.dispatchEvent(new Event("resize"));
+      });
+      render(
+        <MemoryRouter initialEntries={["/privacy"]}>
+          <SiteLayout>
+            <PrivacyPage />
+          </SiteLayout>
+        </MemoryRouter>,
+      );
+      expect(screen.getByTestId("privacy-title")).toBeInTheDocument();
+      expect(screen.getByTestId("legal-disclaimer")).toBeInTheDocument();
+      expect(screen.getByTestId("privacy-intro")).toBeInTheDocument();
+      expect(screen.getByTestId("privacy-contact-link")).toHaveAttribute(
+        "href",
+        "/contact",
+      );
+    });
+  }
 });

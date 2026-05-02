@@ -34,9 +34,9 @@ function App() {
           <Route path="/transparency" element={<TransparencyPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/terms" element={<StubPage title="Terms of use" />} />
-          <Route path="/refund-policy" element={<StubPage title="Refund / correction policy" />} />
-          <Route path="/donor-bill-of-rights" element={<StubPage title="Donor bill of rights" />} />
+          <Route path="/terms" element={<StubPage title="Terms of use" legal />} />
+          <Route path="/refund-policy" element={<StubPage title="Refund / correction policy" legal />} />
+          <Route path="/donor-bill-of-rights" element={<StubPage title="Donor bill of rights" legal />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </SiteLayout>

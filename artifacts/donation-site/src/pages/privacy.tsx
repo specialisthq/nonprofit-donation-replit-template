@@ -21,7 +21,14 @@ export function PrivacyPage() {
             Last updated: {p.lastUpdated}
           </p>
           <p className="mt-2 text-sm text-[hsl(var(--text-muted))]">
-            {org.name} · EIN {org.ein}
+            {org.name} · EIN {org.ein} ·{" "}
+            <a
+              href={`mailto:${org.contactEmail}`}
+              data-testid="privacy-header-email"
+              className="underline decoration-dotted underline-offset-2 hover:text-[hsl(var(--primary))]"
+            >
+              {org.contactEmail}
+            </a>
           </p>
         </header>
 
@@ -47,11 +54,18 @@ export function PrivacyPage() {
               )}
               {s.id === "contact" && (
                 <p>
+                  Email us at{" "}
+                  <a
+                    href={`mailto:${org.contactEmail}`}
+                    data-testid="privacy-contact-email"
+                  >
+                    {org.contactEmail}
+                  </a>
+                  , or{" "}
                   <Link to="/contact" data-testid="privacy-contact-link">
-                    Visit our contact page
+                    visit our contact page
                   </Link>{" "}
-                  for our current email address, mailing address, and other
-                  ways to reach us.
+                  for our mailing address and other ways to reach us.
                 </p>
               )}
             </section>

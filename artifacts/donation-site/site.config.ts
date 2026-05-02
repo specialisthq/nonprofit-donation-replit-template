@@ -1503,7 +1503,7 @@ export const site: SiteConfig = {
         title: "Privacy Policy",
         lastUpdated: "September 15, 2025",
         intro:
-          "Brightwell Community Fund respects your privacy. This policy explains what information we collect when you visit our site or make a donation, how we use it, who we share it with, and the choices you have. If anything here is unclear, please reach out — we're happy to walk through it with you.",
+          "We respect your privacy. This policy explains what information we collect when you visit our site or make a donation, how we use it, who we share it with, and the choices you have. If anything here is unclear, please reach out — we're happy to walk through it with you.",
         sections: [
           {
             id: "scope",
@@ -1596,7 +1596,7 @@ export const site: SiteConfig = {
             id: "international",
             heading: "11. International donors",
             body: [
-              "Brightwell Community Fund is based in the United States and our website is hosted in the United States. If you donate or contact us from outside the US, your information will be transferred to and processed in the US, which may have different privacy protections than your home country. By using this site, you consent to that transfer.",
+              "We are based in the United States and our website is hosted in the United States. If you donate or contact us from outside the US, your information will be transferred to and processed in the US, which may have different privacy protections than your home country. By using this site, you consent to that transfer.",
               "If you're a resident of the EU, UK, or another jurisdiction with specific privacy laws (GDPR, UK GDPR, etc.), you may have additional rights — please email us and we'll work with you to honor them.",
             ],
           },
