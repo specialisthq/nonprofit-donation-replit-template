@@ -1,10 +1,4 @@
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  type FormEvent,
-} from "react";
+import { useMemo, useRef, useState, type FormEvent } from "react";
 import {
   AlertCircle,
   CheckCircle2,
@@ -19,23 +13,9 @@ import { Card, Container, Heading, Section } from "@/components/primitives";
 import { buttonVariants } from "@/components/button";
 import { cn } from "@/lib/utils";
 
-/**
- * Stable subject value used when the donor picks the always-present
- * "Other / general question" option. Kept out of the reasons list
- * so it doesn't clutter the discovery copy.
- */
 const GENERAL_SUBJECT_VALUE = "general";
-
-/** Permissive but fail-fast email check — catches the obvious typos. */
 const EMAIL_RE = /^\S+@\S+\.\S+$/;
 
-/**
- * Pure mailto-URL builder. Exported (via the file's only mailto
- * builder) so the test can hit it indirectly through the form's
- * success state. URLSearchParams encodes spaces as `+`, which mail
- * clients accept but some show literally — replacing them with %20
- * keeps subject lines and bodies looking right everywhere.
- */
 function buildMailtoUrl({
   to,
   shortName,
@@ -65,6 +45,8 @@ function buildMailtoUrl({
     subject: subjectLine,
     body: bodyLines.join("\n"),
   });
+  // URLSearchParams encodes spaces as "+"; mail clients render this
+  // literally in some apps, so normalize to %20.
   return `mailto:${to}?${params.toString().replace(/\+/g, "%20")}`;
 }
 
@@ -105,10 +87,6 @@ function SectionHeader({
   );
 }
 
-/**
- * Renders a single contact-method row (icon + label + value). Pulled
- * out so the email/phone/address blocks all align consistently.
- */
 function MethodRow({
   icon: Icon,
   label,
@@ -148,11 +126,7 @@ function ContactForm({ to, shortName }: { to: string; shortName: string }) {
   const f = site.copy.contact.form;
   const reasons = site.copy.contact.reasons.items;
 
-  /**
-   * If the donor lands on /contact#stock-daf (etc.) — the same anchors
-   * the reasons list uses — preselect the matching subject so the form
-   * picks up where their click left off.
-   */
+  // If the donor lands on /contact#stock-daf, preselect that topic.
   const initialSubject = useMemo(() => {
     if (typeof window === "undefined") return GENERAL_SUBJECT_VALUE;
     const hash = window.location.hash.replace(/^#/, "");
@@ -180,12 +154,8 @@ function ContactForm({ to, shortName }: { to: string; shortName: string }) {
   }
 
   function navigateMailto(url: string) {
-    /**
-     * Use a transient anchor click instead of `window.location.href = …`
-     * so it works in iframes/preview environments and doesn't fight
-     * SPA history. mailto: handlers are owned by the OS — the browser
-     * just hands off.
-     */
+    // Transient anchor click works in iframes/preview where assigning
+    // window.location.href can be blocked.
     const link = document.createElement("a");
     link.href = url;
     link.rel = "noopener noreferrer";
@@ -199,7 +169,6 @@ function ContactForm({ to, shortName }: { to: string; shortName: string }) {
     const next = validate();
     setErrors(next);
     if (Object.keys(next).length > 0) {
-      // Focus the first invalid field so keyboard donors aren't lost.
       if (next.name) nameRef.current?.focus();
       else if (next.email) emailRef.current?.focus();
       else if (next.message) messageRef.current?.focus();
@@ -381,11 +350,6 @@ function ContactForm({ to, shortName }: { to: string; shortName: string }) {
         </div>
         <div className="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-[hsl(var(--text-muted))]">
-            {/*
-              Plain-language privacy note. The form never POSTs anywhere
-              — submitting just hands the prefilled message off to the
-              donor's own email client. That's worth saying out loud.
-            */}
             We don't store anything from this form. Your message goes
             straight to your email app.
           </p>
@@ -402,12 +366,6 @@ function ContactForm({ to, shortName }: { to: string; shortName: string }) {
   );
 }
 
-/**
- * Cloner-facing slot. Renders a clearly marked placeholder card that
- * tells whoever's editing the template exactly where to paste a
- * Formspree / Tally / Typeform / etc. embed. The card uses the same
- * visual style as the mailto form so the page never looks broken.
- */
 function EmbedSlot() {
   const { embedSlot } = site.copy.contact;
   return (
@@ -439,14 +397,6 @@ export function ContactPage() {
   const c = site.copy.contact;
   const { org } = site;
   const showHours = Boolean(c.hours && c.hours.items.length > 0);
-
-  // Update the URL hash when a reason link is clicked so the form
-  // can preselect the topic on next visit. (Anchors also support
-  // bookmarkable deep-links into specific topics.)
-  useEffect(() => {
-    // No-op effect — anchors handle scroll natively. Kept here as a
-    // marker for future enhancement (e.g. smooth-scroll or focus).
-  }, []);
 
   return (
     <>
