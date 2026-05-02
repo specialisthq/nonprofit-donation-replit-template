@@ -3,6 +3,7 @@ import { SiteLayout } from "@/components/site-layout";
 import { LandingPage } from "@/pages/landing";
 import { ThankYouPage } from "@/pages/thank-you";
 import { AboutPage } from "@/pages/about";
+import { ImpactPage } from "@/pages/impact";
 import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
@@ -26,7 +27,7 @@ function App() {
           */}
           <Route path="/thank-you" element={<ThankYouPage />} />
           <Route path="/about" element={<AboutPage />} />
-          <Route path="/impact" element={<StubPage title="Our impact" />} />
+          <Route path="/impact" element={<ImpactPage />} />
           <Route path="/transparency" element={<StubPage title="Transparency" />} />
           <Route path="/contact" element={<StubPage title="Contact" />} />
           <Route path="/privacy" element={<StubPage title="Privacy policy" />} />

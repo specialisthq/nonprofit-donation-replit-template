@@ -15,6 +15,9 @@ export const GIVE_PARAM = "give";
 /** Value of `?give=...` that means "preselect the Monthly tab". */
 export const GIVE_MONTHLY = "monthly";
 
+/** URL search-param name used to preselect a specific dollar amount. */
+export const AMOUNT_PARAM = "amount";
+
 /** Stable id of the donation module's anchor on the landing page. */
 export const DONATE_ANCHOR_ID = "donate";
 
@@ -28,6 +31,26 @@ export const DONATE_ANCHOR_ID = "donate";
  */
 export function monthlyUpgradeHref(): string {
   return `/?${GIVE_PARAM}=${GIVE_MONTHLY}#${DONATE_ANCHOR_ID}`;
+}
+
+/**
+ * Build a URL that lands the donor on the home page with the donation module
+ * preset to a specific dollar amount (and optionally to Monthly mode), and
+ * scrolled to the form. Used by the impact page's "tier recap" cards and any
+ * other cross-page deep-link to a pre-chosen gift amount.
+ *
+ * If the amount matches a preset suggested amount the tile is highlighted;
+ * otherwise the landing page falls back to populating the custom-amount
+ * input — so arbitrary deep-links remain usable, not just preset ones.
+ */
+export function donationTierHref(
+  amount: number,
+  opts?: { monthly?: boolean },
+): string {
+  const params = new URLSearchParams();
+  params.set(AMOUNT_PARAM, String(amount));
+  if (opts?.monthly) params.set(GIVE_PARAM, GIVE_MONTHLY);
+  return `/?${params.toString()}#${DONATE_ANCHOR_ID}`;
 }
 
 /**

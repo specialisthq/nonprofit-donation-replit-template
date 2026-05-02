@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { DONATE_ANCHOR_ID, GIVE_MONTHLY, GIVE_PARAM } from "@/lib/donation-flow";
+import {
+  AMOUNT_PARAM,
+  DONATE_ANCHOR_ID,
+  GIVE_MONTHLY,
+  GIVE_PARAM,
+} from "@/lib/donation-flow";
 import {
   Award,
   ChevronRight,
@@ -47,39 +52,77 @@ function findDefault(items: SuggestedAmount[]): number | null {
   return items.find((a) => a.default)?.amount ?? items[1]?.amount ?? null;
 }
 
+/**
+ * Pick the initial selected amount + custom-input value for one mode given
+ * an optional URL-requested amount. Preset matches highlight a tier;
+ * non-matches populate the custom-amount input so the donor still sees the
+ * exact figure they were asked to give.
+ */
+function pickInitialAmount(
+  requested: number | null,
+  presets: SuggestedAmount[],
+): { amount: number | null; custom: string } {
+  if (requested == null) {
+    return { amount: findDefault(presets), custom: "" };
+  }
+  const matchesPreset = presets.some((p) => p.amount === requested);
+  return matchesPreset
+    ? { amount: requested, custom: "" }
+    : { amount: null, custom: String(requested) };
+}
+
 export function LandingPage() {
   const { copy, branding, org } = site;
   const landing = copy.landing;
 
-  // Cross-page URL contract: `/?give=monthly` (typically arriving from the
-  // thank-you page's monthly-upgrade card) preselects the Monthly tab and
-  // auto-scrolls the donation module into view. See `lib/donation-flow.ts`.
+  // Cross-page URL contract (see `lib/donation-flow.ts`):
+  //   ?give=monthly       — preselects the Monthly tab
+  //   ?amount=<number>    — preselects that dollar amount (matches a preset
+  //                         tier when possible, otherwise populates the
+  //                         custom-amount input)
+  // Either param also auto-scrolls the donation module into view on mount.
   const [searchParams] = useSearchParams();
-  const wantsMonthly =
-    searchParams.get(GIVE_PARAM) === GIVE_MONTHLY;
-  const [mode, setMode] = useState<DonationMode>(
-    wantsMonthly ? "monthly" : "oneTime",
-  );
+  const wantsMonthly = searchParams.get(GIVE_PARAM) === GIVE_MONTHLY;
+  const requestedAmount = (() => {
+    const raw = searchParams.get(AMOUNT_PARAM);
+    if (!raw) return null;
+    const n = Number(raw);
+    return Number.isFinite(n) && n > 0 ? n : null;
+  })();
+  const initialMode: DonationMode = wantsMonthly ? "monthly" : "oneTime";
+  const [mode, setMode] = useState<DonationMode>(initialMode);
 
   useEffect(() => {
-    if (!wantsMonthly) return;
+    if (!wantsMonthly && requestedAmount == null) return;
     // Defer one frame so the donation module is mounted before we scroll.
     const id = requestAnimationFrame(() => {
       const el = document.getElementById(DONATE_ANCHOR);
       el?.scrollIntoView({ behavior: "smooth", block: "start" });
     });
     return () => cancelAnimationFrame(id);
-    // Only react to the initial value of the query param.
+    // Only react to the initial values of the query params.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Pick initial preset/custom for whichever mode we open in. Falling back
+  // to the custom-amount input when ?amount= doesn't match a preset keeps
+  // arbitrary deep-links (e.g. from a peer-to-peer share) usable.
+  const oneTimeInit = pickInitialAmount(
+    initialMode === "oneTime" ? requestedAmount : null,
+    site.amounts.oneTime,
+  );
+  const monthlyInit = pickInitialAmount(
+    initialMode === "monthly" ? requestedAmount : null,
+    site.amounts.monthly,
+  );
   const [oneTimeAmount, setOneTimeAmount] = useState<number | null>(
-    findDefault(site.amounts.oneTime),
+    oneTimeInit.amount,
   );
   const [monthlyAmount, setMonthlyAmount] = useState<number | null>(
-    findDefault(site.amounts.monthly),
+    monthlyInit.amount,
   );
-  const [oneTimeCustom, setOneTimeCustom] = useState("");
-  const [monthlyCustom, setMonthlyCustom] = useState("");
+  const [oneTimeCustom, setOneTimeCustom] = useState(oneTimeInit.custom);
+  const [monthlyCustom, setMonthlyCustom] = useState(monthlyInit.custom);
   const [storyImageBroken, setStoryImageBroken] = useState(false);
 
   const moduleRef = useRef<HTMLDivElement>(null);

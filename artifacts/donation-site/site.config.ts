@@ -359,10 +359,106 @@ export type SiteConfig = {
       };
     };
     impact: {
-      headline: string;
-      subhead: string;
+      /** Top-of-page headline + a single supporting metric. */
+      hero: {
+        eyebrow: string;
+        headline: string;
+        subhead: string;
+        /**
+         * One large headline number rendered next to the hero copy
+         * (e.g. "94¢ of every dollar goes to programs"). Use the most
+         * credible single metric you can defend.
+         */
+        supportingMetric: { value: string; label: string; context?: string };
+      };
+      /**
+       * Top-line metrics strip rendered under the hero. Also used as the
+       * landing page's `impactProof` fallback when that field is omitted,
+       * so cloners only have to maintain one source of truth.
+       */
       metrics: ImpactMetric[];
-      stories: { title: string; body: string }[];
+      /** 2–4 program cards summarizing what the org actually does. */
+      programs: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        items: {
+          name: string;
+          summary: string;
+          /**
+           * lucide-react icon picked from a curated set. Defaults to
+           * `sparkles` when omitted.
+           */
+          icon?:
+            | "utensils"
+            | "graduationCap"
+            | "home"
+            | "handshake"
+            | "users"
+            | "shield"
+            | "sparkles";
+          /** Path under /public; falls back to a brand-gradient placeholder. */
+          imagePath?: string;
+          imageAlt?: string;
+          /** 2–4 tangible outcomes (big number + short label). */
+          outcomes: { value: string; label: string }[];
+        }[];
+      };
+      /**
+       * Visual breakdown of how every donated dollar is spent. The page
+       * renders a horizontal stacked bar plus a labeled legend, and links
+       * out to the transparency page for full financials.
+       *
+       * Percentages should sum to ~100; the bar handles minor over/under.
+       */
+      moneyGoes: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+        breakdown: {
+          label: string;
+          /** 0–100. Width of this segment in the stacked bar. */
+          percent: number;
+          /** Color of this segment. Defaults rotate primary → accent → muted. */
+          tone?: "primary" | "accent" | "muted";
+        }[];
+        /** Optional caveat shown beneath the bar (e.g. "Audited annually"). */
+        note?: string;
+        /** Link to the full financial breakdown (typically /transparency). */
+        transparencyLink: { label: string; href: string };
+      };
+      /** Long-form donor-trust story with a pull-quote. */
+      beneficiary: {
+        eyebrow: string;
+        headline: string;
+        body: string[];
+        quote: string;
+        /** Display name of the person being quoted. */
+        attribution: string;
+        /** Optional context line beneath the attribution. */
+        role?: string;
+        imagePath?: string;
+        imageAlt?: string;
+      };
+      /**
+       * Short header for the "click an amount → land on the donation form
+       * with that amount preselected" recap row. The tier values themselves
+       * are reused from `amounts.oneTime` so they always match the landing
+       * donation module.
+       */
+      tierRecap: {
+        eyebrow: string;
+        headline: string;
+        subhead?: string;
+      };
+      /** Closing call-to-action that drives the visitor back to the donation flow. */
+      closingCta: {
+        eyebrow?: string;
+        headline: string;
+        body: string;
+        /** Visible label of the donate button. */
+        ctaLabel: string;
+      };
     };
     transparency: {
       headline: string;
@@ -800,25 +896,112 @@ export const site: SiteConfig = {
       },
     },
     impact: {
-      headline: "Real help, measured honestly.",
-      subhead:
-        "We publish our numbers every year because trust is built on transparency, not promises.",
+      hero: {
+        eyebrow: "Our impact",
+        headline: "Where your money actually goes.",
+        subhead:
+          "We publish our numbers every year because trust is built on transparency, not promises. Here's exactly what your gift funds — and the families it helps.",
+        supportingMetric: {
+          value: "94¢",
+          label: "of every dollar funds programs",
+          context: "Independently audited, every year.",
+        },
+      },
       metrics: [
         { value: "12,400", label: "Meals delivered last year" },
-        { value: "320", label: "Families served" },
+        { value: "320", label: "Families directly served" },
         { value: "94¢", label: "Of every dollar to programs" },
         { value: "10", label: "Years serving the community" },
       ],
-      stories: [
-        {
-          title: "The Alvarez family",
-          body: "After a sudden layoff, the Alvarez family used our emergency grocery program for three months while they got back on their feet. Today they're regular volunteers in our Saturday delivery program.",
+      programs: {
+        eyebrow: "Our programs",
+        headline: "Three programs. Real outcomes.",
+        subhead:
+          "We keep our scope narrow on purpose so we can measure what we deliver — and tell you about it honestly.",
+        items: [
+          {
+            name: "Emergency groceries",
+            summary:
+              "Same-week grocery delivery for families navigating a layoff, illness, or housing transition.",
+            icon: "utensils",
+            outcomes: [
+              { value: "12,400", label: "Meals delivered" },
+              { value: "210", label: "Families served" },
+            ],
+          },
+          {
+            name: "After-school care",
+            summary:
+              "Healthy snacks, homework help, and a safe place to land for kids whose parents work afternoons.",
+            icon: "graduationCap",
+            outcomes: [
+              { value: "60", label: "Kids served daily" },
+              { value: "5", label: "School partners" },
+            ],
+          },
+          {
+            name: "Short-term rent assistance",
+            summary:
+              "Emergency rent grants to help neighbors stay housed during a temporary income shock.",
+            icon: "home",
+            outcomes: [
+              { value: "48", label: "Evictions prevented" },
+              { value: "$92K", label: "Rent assistance" },
+            ],
+          },
+        ],
+      },
+      moneyGoes: {
+        eyebrow: "Where every dollar goes",
+        headline: "94¢ of every dollar funds programs.",
+        subhead:
+          "Operating costs are covered by a private endowment, so your gift goes almost entirely to community programs.",
+        // Cloners: tweak these to match your most recent audited Form 990
+        // breakdown. Round to whole percent — donors don't need decimals.
+        breakdown: [
+          { label: "Programs", percent: 94, tone: "primary" },
+          { label: "Operations", percent: 4, tone: "muted" },
+          { label: "Fundraising", percent: 2, tone: "accent" },
+        ],
+        note:
+          "Independently audited every year. We also publish our IRS Form 990 in full.",
+        transparencyLink: {
+          label: "See the full annual report",
+          href: "/transparency",
         },
-        {
-          title: "Lincoln Elementary after-school",
-          body: "Our partnership with Lincoln Elementary funds healthy snacks and homework help for 60 kids every weekday afternoon — at no cost to families.",
-        },
-      ],
+      },
+      beneficiary: {
+        eyebrow: "A neighbor's story",
+        headline: "When the Alvarez family lost their income, the community showed up.",
+        body: [
+          "After a sudden layoff in early 2024, the Alvarez family used our emergency grocery program for three months while they got back on their feet — no paperwork, no questions, just groceries on the porch every Tuesday.",
+          "Today, they're some of our most active volunteers. Maria packs boxes on Saturday mornings; Carlos drives a delivery route. Their kids help bag produce.",
+          "This is what your gift makes possible: not just a one-time hand, but a community where neighbors take care of each other in both directions.",
+        ],
+        quote:
+          "Brightwell didn't just feed us when we needed it. They gave us a way to give back when we got back on our feet. That's the difference.",
+        attribution: "Maria Alvarez",
+        role: "Springfield resident & volunteer",
+        // Cloners: drop a real photo at /public/beneficiary.webp (or any
+        // path under /public). Leave imagePath undefined to render a
+        // tasteful brand-colored placeholder.
+        imagePath: undefined,
+        imageAlt:
+          "The Alvarez family loading grocery boxes into a community delivery van.",
+      },
+      tierRecap: {
+        eyebrow: "Pick the impact you want to fund",
+        headline: "Your gift, your outcome.",
+        subhead:
+          "Click any tier below — we'll take you straight to the donation form with that amount already selected.",
+      },
+      closingCta: {
+        eyebrow: "Ready to help?",
+        headline: "Turn this impact into action.",
+        body:
+          "Every gift — one-time or monthly — funds the programs above. 100% of your public donation reaches the families we serve.",
+        ctaLabel: "Donate now",
+      },
     },
     transparency: {
       headline: "Where your money goes.",
