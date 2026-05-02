@@ -397,9 +397,6 @@ export type SiteConfig = {
             | "users"
             | "shield"
             | "sparkles";
-          /** Path under /public; falls back to a brand-gradient placeholder. */
-          imagePath?: string;
-          imageAlt?: string;
           /** 2–4 tangible outcomes (big number + short label). */
           outcomes: { value: string; label: string }[];
         }[];

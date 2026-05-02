@@ -52,7 +52,9 @@ describe("Impact page — hero", () => {
 
   it("renders the supporting metric value, label, and context", () => {
     const m = site.copy.impact.hero.supportingMetric;
-    expect(screen.getByText(m.value)).toBeInTheDocument();
+    // The supporting metric value (e.g. "94¢") may legitimately repeat in
+    // the metrics strip below; assert presence rather than uniqueness.
+    expect(screen.getAllByText(m.value).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText(m.label)).toBeInTheDocument();
     if (m.context) {
       expect(screen.getByText(m.context)).toBeInTheDocument();
@@ -78,8 +80,11 @@ describe("Impact page — programs", () => {
 
   it("renders one card per program with its name, summary, and outcomes", () => {
     const list = screen.getByRole("list", { name: /our programs/i });
-    const items = within(list).getAllByRole("listitem");
-    expect(items).toHaveLength(site.copy.impact.programs.items.length);
+    // Count programs by their level-3 headings (each card has exactly one);
+    // querying nested listitems would also pick up the per-program outcome
+    // <li> elements, which are intentional but not what we're counting.
+    const programHeadings = within(list).getAllByRole("heading", { level: 3 });
+    expect(programHeadings).toHaveLength(site.copy.impact.programs.items.length);
     for (const program of site.copy.impact.programs.items) {
       expect(
         within(list).getByRole("heading", { level: 3, name: program.name }),
@@ -119,8 +124,11 @@ describe("Impact page — money-goes breakdown", () => {
     expect(items).toHaveLength(site.copy.impact.moneyGoes.breakdown.length);
     for (const segment of site.copy.impact.moneyGoes.breakdown) {
       expect(within(legend).getByText(segment.label)).toBeInTheDocument();
+      // Use a word-boundary regex so e.g. "4%" doesn't accidentally match
+      // inside "94%". `\b` treats the digit's start as a boundary because
+      // it's preceded by whitespace in the rendered "94% Programs" text.
       expect(
-        within(legend).getByText(`${segment.percent}%`, { exact: false }),
+        within(legend).getByText(new RegExp(`\\b${segment.percent}%`)),
       ).toBeInTheDocument();
     }
   });
@@ -237,8 +245,11 @@ describe("donationTierHref + landing deep-link contract", () => {
       `/?${AMOUNT_PARAM}=${tier.amount}&${GIVE_PARAM}=${GIVE_MONTHLY}#donate`,
     );
     const form = screen.getByRole("form");
-    // Monthly tab toggle should be pressed
-    const monthlyToggle = within(form).getByRole("button", {
+    // Scope the "Monthly" lookup to the gift-type toggle group so we don't
+    // accidentally hit the monthly-upgrade card or other "Monthly" mentions
+    // elsewhere on the landing page.
+    const giftType = within(form).getByRole("group", { name: /gift type/i });
+    const monthlyToggle = within(giftType).getByRole("button", {
       name: new RegExp(site.copy.landing.donationModule.monthlyLabel, "i"),
     });
     expect(monthlyToggle).toHaveAttribute("aria-pressed", "true");
