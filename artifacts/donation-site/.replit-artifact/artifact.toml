@@ -1,6 +1,6 @@
 kind = "web"
-previewPath = "/"
-title = "Donation Site"
+previewPath = "/template"
+title = "Donation Site Template"
 version = "1.0.0"
 id = "artifacts/donation-site"
 router = "path"
@@ -11,7 +11,7 @@ version = "1.0.0"
 
 [[services]]
 name = "web"
-paths = [ "/" ]
+paths = [ "/template" ]
 localPort = 21957
 
 [services.development]
@@ -28,4 +28,4 @@ to = "/index.html"
 
 [services.env]
 PORT = "21957"
-BASE_PATH = "/"
+BASE_PATH = "/template/"

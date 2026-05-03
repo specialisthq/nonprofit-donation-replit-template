@@ -2,6 +2,8 @@
 
 A frontend-only, single-config nonprofit donation site you can clone, fill in, and publish in an afternoon. Built with React + Vite. Donations route to a PayPal hosted donate button — there is no server to run, no database to set up, and no payment integration to maintain. Cloners customize **one file** (`artifacts/donation-site/site.config.ts`) and replace a couple of images.
 
+> **How this template is developed.** The repo you're looking at is the public template (`artifacts/donation-site/`, preview path `/template`). The maintainer also runs a second artifact in the same Replit project — `artifacts/friends-of-mag-library/` at preview path `/` — which is their own live nonprofit site, started from this template. That second artifact is `.gitignore`d so it never lands in this public repo; only the generic template is pushed to GitHub. If you clone this template, you'll get just `artifacts/donation-site/` and you're free to either edit it in place or copy it into a new artifact of your own and gitignore the original.
+
 The template ships ten pages — landing, thank-you, about, impact, transparency, contact, privacy, terms, refund/correction policy, and the standard Donor Bill of Rights — plus a fully accessible donation module, a sticky mobile CTA, FAQ accordion, donor testimonials slot, charity-rating badges slot, and a deep-linkable amount preselect (so an "I'll give $50" email link can preselect $50 on the landing page).
 
 > **Preview**: run the dev server (step 4 below) and open `http://localhost:5173/` — the demo is themed as a fictional community fund called "Brightwell Community Fund" so you can see what every section looks like before you put your own copy in.

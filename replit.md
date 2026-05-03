@@ -2,9 +2,20 @@
 
 ## Overview
 
-A frontend-only pnpm workspace monorepo containing a clonable nonprofit donation funnel template. The template is a single `react-vite` artifact mounted at `/`. Cloners customize their site by editing one file (`artifacts/donation-site/site.config.ts`) — org info, EIN, suggested amounts, brand colors, page copy, FAQs, legal-page text, and PayPal hosted-button ID. Donations route to a PayPal hosted donate button; there is no backend.
+A frontend-only pnpm workspace monorepo with **two artifacts** that share the same donation-funnel codebase but serve different audiences:
+
+1. **`artifacts/donation-site/`** — the pristine, public template at preview path **`/template`**. This is what lives on GitHub at <https://github.com/specialisthq/nonprofit-donation-replit-template> for any nonprofit to clone. Its footer carries a "Clone this site on Replit" link (driven by `site.cloneCta` in `site.config.ts`).
+2. **`artifacts/friends-of-mag-library/`** — the user's live nonprofit site at preview path **`/`**. It started as a copy of the template and is **git-ignored** (see `.gitignore`) so the live site never leaks into the public template repo. Its `cloneCta.enabled` is `false`, so no clone link appears in its footer.
+
+Cloners (and the live-site maintainer) customize one file per artifact (`site.config.ts`) — org info, EIN, suggested amounts, brand colors, page copy, FAQs, legal-page text, and PayPal hosted-button ID. Donations route to a PayPal hosted donate button; there is no backend.
 
 For everything a cloner needs to know to ship their own site (PayPal setup, image guidelines, deploy, compliance checklist), see **`README.md`** at the repo root.
+
+### Git workflow for this dual layout
+
+- The git remote `origin` should point at <https://github.com/specialisthq/nonprofit-donation-replit-template>. Only the template (`artifacts/donation-site/`) is committed; `artifacts/friends-of-mag-library/` is in `.gitignore` and never pushed.
+- To propagate template improvements into the live site, copy the changed files manually from `artifacts/donation-site/` into `artifacts/friends-of-mag-library/`. The two artifacts are independent copies on purpose.
+- If `git remote -v` does not yet show `origin` pointing at the template repo, run `git remote set-url origin https://github.com/specialisthq/nonprofit-donation-replit-template` (or `git remote add origin …` if missing) before your first push.
 
 ## Stack
 
@@ -20,7 +31,9 @@ For everything a cloner needs to know to ship their own site (PayPal setup, imag
 
 ## Project structure
 
-- `artifacts/donation-site/` — the donation site (React + Vite)
+- `artifacts/donation-site/` — public template (React + Vite), preview path `/template`. Tracked in git.
+- `artifacts/friends-of-mag-library/` — live Friends of MAG Library site (React + Vite), preview path `/`. **Git-ignored.** A direct copy of the template with `cloneCta.enabled = false` and a TODO comment in `site.config.ts` flagging the placeholder values to replace. Same source layout as below.
+- `artifacts/donation-site/` source layout (mirrored in friends-of-mag-library):
   - `site.config.ts` — strongly-typed single source of truth for org info, branding, copy, PayPal config, suggested amounts, FAQs, legal pages, and feature flags. **The only file most cloners need to edit.**
   - `src/main.tsx` — applies theme tokens from `site.config.ts` to `:root` at boot.
   - `src/App.tsx` — react-router routes for all ten pages.
@@ -41,7 +54,7 @@ For everything a cloner needs to know to ship their own site (PayPal setup, imag
     - `privacy.tsx`, `terms.tsx`, `refund-policy.tsx`, `donor-bill-of-rights.tsx` — legal pages, all built on `<LegalPageView />`.
     - `not-found.tsx` — 404.
   - `public/` — `hero.webp`, `story.webp`, `favicon.svg`, `opengraph.jpg` (cloners replace).
-  - `src/test/` — Vitest suite (currently 186 tests across 10 files covering donation module, FAQ, sticky CTA, PayPal URL builder, landing flow, thank-you, transparency, contact, refund policy, donor bill of rights).
+  - `src/test/` — Vitest suite (188 tests across 11 files covering donation module, FAQ, sticky CTA, PayPal URL builder, landing flow, thank-you, transparency, contact, refund policy, donor bill of rights, and the footer cloneCta link). The live `friends-of-mag-library` artifact mirrors the same test files.
 - `scripts/` — workspace tooling.
 - `README.md` — cloner-facing documentation.
 
@@ -54,9 +67,12 @@ For everything a cloner needs to know to ship their own site (PayPal setup, imag
 - `pnpm install` — install workspace dependencies.
 - `pnpm run typecheck` — typecheck all artifacts and scripts.
 - `pnpm run build` — typecheck + build all packages.
-- `pnpm --filter @workspace/donation-site dev` — run the donation site dev server.
-- `pnpm --filter @workspace/donation-site run test` — run the Vitest suite.
-- `pnpm --filter @workspace/donation-site run build` — production build (Vite).
+- `pnpm --filter @workspace/donation-site dev` — run the template dev server (mounted at `/template`).
+- `pnpm --filter @workspace/donation-site run test` — run the template Vitest suite.
+- `pnpm --filter @workspace/donation-site run build` — template production build (Vite).
+- `pnpm --filter @workspace/friends-of-mag-library dev` — run the live site dev server (mounted at `/`).
+- `pnpm --filter @workspace/friends-of-mag-library run test` — run the live site Vitest suite.
+- `pnpm --filter @workspace/friends-of-mag-library run build` — live site production build (Vite).
 
 ## Cloning this template
 

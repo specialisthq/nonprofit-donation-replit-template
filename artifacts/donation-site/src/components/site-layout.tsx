@@ -260,9 +260,21 @@ function Footer() {
           )}
         </div>
       </Container>
-      <Container className="mt-10 border-t border-[hsl(var(--border))] pt-6 text-xs text-[hsl(var(--text-muted))] flex flex-wrap justify-between gap-2">
+      <Container className="mt-10 border-t border-[hsl(var(--border))] pt-6 text-xs text-[hsl(var(--text-muted))] flex flex-wrap items-center justify-between gap-2">
         <span>© {new Date().getFullYear()} {org.name}. All rights reserved.</span>
-        <span>{org.name} is a registered 501(c)(3) nonprofit.</span>
+        <span className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <span>{org.name} is a registered 501(c)(3) nonprofit.</span>
+          {site.cloneCta?.enabled && (
+            <a
+              href={site.cloneCta.replitImportUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline underline-offset-2 hover:text-[hsl(var(--primary))]"
+            >
+              {site.cloneCta.label}
+            </a>
+          )}
+        </span>
       </Container>
     </footer>
   );

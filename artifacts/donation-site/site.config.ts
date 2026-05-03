@@ -766,6 +766,21 @@ export type SiteConfig = {
     showShare: boolean;
     showStickyMobileCta: boolean;
   };
+
+  /**
+   * Optional "Clone this site on Replit" footer link. When `enabled` is true,
+   * a small link is rendered on every page's footer that opens the upstream
+   * GitHub template directly in a new Replit via Replit's rapid-import URL
+   * (`https://replit.com/github.com/<owner>/<repo>`). The default template
+   * keeps this enabled so cloners discover where the template came from; live
+   * deployments typically set `enabled: false` to hide the link.
+   */
+  cloneCta?: {
+    enabled: boolean;
+    label: string;
+    /** Replit rapid-import URL, e.g. "https://replit.com/github.com/owner/repo". */
+    replitImportUrl: string;
+  };
 };
 
 export const site: SiteConfig = {
@@ -2004,6 +2019,13 @@ export const site: SiteConfig = {
     showMonthlyUpsell: true,
     showShare: true,
     showStickyMobileCta: true,
+  },
+
+  cloneCta: {
+    enabled: true,
+    label: "Clone this site on Replit",
+    replitImportUrl:
+      "https://replit.com/github.com/specialisthq/nonprofit-donation-replit-template",
   },
 };
 

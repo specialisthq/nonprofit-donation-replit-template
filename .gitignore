@@ -47,3 +47,6 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Live nonprofit site (kept local; template repo is artifacts/donation-site)
+artifacts/friends-of-mag-library/
