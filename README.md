@@ -6,7 +6,7 @@ A frontend-only, single-config nonprofit donation site you can clone, fill in, a
 
 The template ships ten pages — landing, thank-you, about, impact, transparency, contact, privacy, terms, refund/correction policy, and the standard Donor Bill of Rights — plus a fully accessible donation module, a sticky mobile CTA, FAQ accordion, donor testimonials slot, charity-rating badges slot, and a deep-linkable amount preselect (so an "I'll give $50" email link can preselect $50 on the landing page).
 
-> **Preview**: run the dev server (step 4 below) and open `http://localhost:5173/` — the demo is themed as a fictional community fund called "Brightwell Community Fund" so you can see what every section looks like before you put your own copy in.
+> **Preview**: open the project in Replit; the template renders in the preview pane at the **`/template`** path (the `/` path is reserved for the maintainer's own live site, which is git-ignored). The demo is themed as a fictional community fund called "Brightwell Community Fund" so you can see what every section looks like before you put your own copy in. If you cloned the template into a fresh project of your own, the template lives at `/` by default — just check your artifact's `previewPath` in `artifacts/donation-site/.replit-artifact/artifact.toml`.
 
 ---
 
@@ -26,7 +26,7 @@ That's it. No API keys, no database, no third-party integrations are required to
 1. **Get the code.** Either fork this repo on GitHub and import it into Replit, or click **Use Template** in Replit and start from a fresh copy.
 2. **Edit `artifacts/donation-site/site.config.ts`.** Set your org name, EIN, contact email, PayPal hosted-button ID, suggested amounts, brand colors, and copy. See **Editing your content** below for a guided walkthrough of every section.
 3. **Swap the demo images** in `artifacts/donation-site/public/` — replace `hero.webp` and `story.webp` with your own. Keep the same filenames or update the `branding.heroImagePath` / `branding.supportingImagePaths` paths in config.
-4. **Run the dev preview.** From the project root: `pnpm install`, then `pnpm --filter @workspace/donation-site dev` (or just open the project in Replit and the `artifacts/donation-site: web` workflow runs automatically).
+4. **Run the dev preview.** Open the project in Replit and the `artifacts/donation-site: web` workflow runs automatically; the template will be visible in the preview pane (at `/template` in this dual-artifact project, or at `/` in a fresh clone). From the command line, you can also run `pnpm install` followed by `pnpm --filter @workspace/donation-site dev`.
 5. **Deploy.** Click the **Publish** button in Replit. Once it's live, point your custom domain at the deployed URL (see **Deploying** below).
 
 ---
