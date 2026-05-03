@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { site } from "@/../site.config";
+import site from "@config";
 import { LegalPageView } from "@/components/legal-page-view";
 
 export function PrivacyPage() {

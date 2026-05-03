@@ -10,7 +10,6 @@ import { PrivacyPage } from "@/pages/privacy";
 import { TermsPage } from "@/pages/terms";
 import { RefundPolicyPage } from "@/pages/refund-policy";
 import { DonorBillOfRightsPage } from "@/pages/donor-bill-of-rights";
-import { StubPage } from "@/pages/stub";
 import NotFound from "@/pages/not-found";
 
 function App() {
