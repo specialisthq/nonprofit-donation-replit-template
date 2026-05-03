@@ -1,171 +1,94 @@
-# Nonprofit Donation Funnel — Clonable Template
+# Nonprofit Donation Site — Free Replit Template
 
-A frontend-only, single-config nonprofit donation site you can clone, fill in, and publish in an afternoon. Built with React + Vite. Donations route to a PayPal hosted donate button — there is no server to run, no database to set up, and no payment integration to maintain. Cloners customize **one file** (`artifacts/donation-site/site.config.ts`) and replace a couple of images.
+A complete, ready-to-launch donation website for small nonprofits. Clone it on Replit, fill in your organization's details in one file, swap a couple of images, and publish. No coding background required, no servers to run, no databases to manage. Donations go straight to your **PayPal Donate** button.
 
-> **How this template is developed.** The repo you're looking at is the public template (`artifacts/donation-site/`, preview path `/template`). The maintainer also runs a second artifact in the same Replit project — `artifacts/friends-of-mag-library/` at preview path `/` — which is their own live nonprofit site, started from this template. That second artifact is `.gitignore`d so it never lands in this public repo; only the generic template is pushed to GitHub. If you clone this template, you'll get just `artifacts/donation-site/` and you're free to either edit it in place or copy it into a new artifact of your own and gitignore the original.
+The template ships with everything a small 501(c)(3) usually needs:
 
-The template ships ten pages — landing, thank-you, about, impact, transparency, contact, privacy, terms, refund/correction policy, and the standard Donor Bill of Rights — plus a fully accessible donation module, a sticky mobile CTA, FAQ accordion, donor testimonials slot, charity-rating badges slot, and a deep-linkable amount preselect (so an "I'll give $50" email link can preselect $50 on the landing page).
+- A landing page with a built-in donation module (one-time and monthly, suggested amounts, custom amount)
+- Thank-you, About, Impact, Transparency, and Contact pages
+- Standard legal pages (Privacy, Terms, Refund/Correction Policy, Donor Bill of Rights)
+- A sticky "Donate" bar on mobile, an FAQ section, donor-trust badges, and a fully accessible design
 
-> **Preview**: open the project in Replit; the template renders in the preview pane at the **`/template`** path (the `/` path is reserved for the maintainer's own live site, which is git-ignored). The demo is themed as a fictional community fund called "Brightwell Community Fund" so you can see what every section looks like before you put your own copy in. If you cloned the template into a fresh project of your own, the template lives at `/` by default — just check your artifact's `previewPath` in `artifacts/donation-site/.replit-artifact/artifact.toml`.
-
----
-
-## Prerequisites
-
-1. A **Replit account** (free tier is fine for development — pick a paid plan for production hosting and custom domains).
-2. A **PayPal Donate hosted button** for your nonprofit. Create one here:
-   <https://www.paypal.com/donate/buttons> (you must have a verified PayPal nonprofit account; PayPal walks you through the 501(c)(3) verification).
-3. Two images: a hero image (1600×900 minimum) and an optional supporting image (1200×800). WebP or AVIF preferred. See the **Image guidelines** section below.
-
-That's it. No API keys, no database, no third-party integrations are required to ship the donation funnel itself.
+A live demo is themed as a fictional charity called **"Brightwell Community Fund"** so you can see what every section looks like before you put your own words and images in.
 
 ---
 
-## Quick start (5 steps)
+## Who this is for
 
-1. **Get the code.** Either fork this repo on GitHub and import it into Replit, or click **Use Template** in Replit and start from a fresh copy.
-2. **Edit `artifacts/donation-site/site.config.ts`.** Set your org name, EIN, contact email, PayPal hosted-button ID, suggested amounts, brand colors, and copy. See **Editing your content** below for a guided walkthrough of every section.
-3. **Swap the demo images** in `artifacts/donation-site/public/` — replace `hero.webp` and `story.webp` with your own. Keep the same filenames or update the `branding.heroImagePath` / `branding.supportingImagePaths` paths in config.
-4. **Run the dev preview.** Open the project in Replit and the `artifacts/donation-site: web` workflow runs automatically; the template will be visible in the preview pane (at `/template` in this dual-artifact project, or at `/` in a fresh clone). From the command line, you can also run `pnpm install` followed by `pnpm --filter @workspace/donation-site dev`.
-5. **Deploy.** Click the **Publish** button in Replit. Once it's live, point your custom domain at the deployed URL (see **Deploying** below).
+- Small US-based 501(c)(3) nonprofits that want a polished donation site without hiring a developer
+- Volunteers or board members comfortable editing text in a single file
+- Anyone who already has a **PayPal Donate** button (or is willing to set one up — it's free)
+
+---
+
+## What you'll need before you start
+
+1. A free **Replit account** — sign up at <https://replit.com>. The free plan is fine while you build; you'll want a paid plan to publish with a custom domain.
+2. A **PayPal Donate hosted button** for your nonprofit. Create one for free at <https://www.paypal.com/donate/buttons>. PayPal will walk you through verifying your nonprofit status.
+3. **Two images**: one large hero photo (around 1600×900 pixels) and one optional supporting photo (around 1200×800). Save them as `.webp` if you can — they'll load faster.
+
+You do **not** need any API keys, a database, or a credit-card processor account. PayPal handles all the payment side.
+
+---
+
+## Quick start (about 30 minutes)
+
+1. **Open the template in Replit.** From this GitHub page, click **Code → Open with Replit**, or in Replit click **Create app → Import from GitHub** and paste this repo's URL.
+2. **Wait a minute** for Replit to install everything and start the preview. The demo site will appear in the preview panel on the right.
+3. **Open the file `site.config.ts`** inside the `artifacts/donation-site/` folder. This single file holds your org name, EIN, contact info, brand colors, all page text, suggested donation amounts, FAQ entries, board members, and legal-page wording. Everything you'd want to change lives here.
+4. **Paste in your PayPal button ID** (see "Setting up PayPal" below).
+5. **Replace the demo images** in `artifacts/donation-site/public/` — drag your own files into that folder using the Replit file browser, named `hero.webp` and `story.webp`.
+6. **Click Publish** at the top of Replit when you're ready to go live.
 
 ---
 
 ## Editing your content
 
-Almost every visible word, color, image path, dollar amount, FAQ entry, board member name, financial figure, and legal-page paragraph lives in **`artifacts/donation-site/site.config.ts`**. The file is one large strongly-typed object. TypeScript will catch mistakes (missing fields, wrong shape, typos in icon names) the moment you save.
+Almost every visible word, color, dollar amount, FAQ entry, and legal paragraph is in **`site.config.ts`**. The file is organized into clearly labeled sections:
 
-The top-level shape:
+| Section | What it controls |
+| --- | --- |
+| `org` | Your nonprofit's name, EIN, address, contact email, phone, founded year |
+| `paypal` | Your PayPal hosted-button ID and how the checkout opens (new tab vs same tab) |
+| `amounts` | Your suggested one-time and monthly donation amounts plus the impact label for each |
+| `branding` | Brand colors, logo, hero image, supporting image |
+| `typography` | Optional custom fonts |
+| `copy` | All page text — headlines, mission statement, FAQ, story, board roster, legal pages |
+| `social` | Optional links to your social media accounts |
+| `features` | Toggles for things like the sticky mobile bar and FAQ section |
 
-```ts
-export const site: SiteConfig = {
-  org:        { /* your nonprofit's identity */ },
-  paypal:     { /* hosted-button ID + flow mode */ },
-  amounts:    { /* one-time and monthly suggested amounts */ },
-  branding:   { /* colors, logo, hero image */ },
-  typography: { /* optional font families */ },
-  copy:       { /* page-by-page text content */ },
-  social:     { /* optional social links */ },
-  features:   { /* feature flags */ },
-};
-```
+The file has comments throughout (lines starting with `//`) explaining each field with examples. If you make a mistake — a missing field, a typo — Replit will underline the problem in red so you can fix it before publishing.
 
-### `org` — your nonprofit's identity
+### Tips for filling it in
 
-| Field | Example | Notes |
-| ----- | ------- | ----- |
-| `name` | `"Brightwell Community Fund"` | Used in the header, footer, page titles, legal-page intros, and donor receipts. |
-| `shortName` | `"Brightwell"` | Shown in tighter spaces (e.g. mobile header). |
-| `tagline` | `"Neighbors helping neighbors thrive."` | Optional one-line tagline. |
-| `missionOneLiner` | `"We fund local programs that…"` | A single-sentence mission statement used in metadata and intro copy. |
-| `ein` | `"12-3456789"` | Your real US EIN. Shown in the trust bar and on legal pages. |
-| `foundedYear` | `2014` | Drives "since YYYY" copy where relevant. |
-| `address` | `{ line1, city, state, zip, country }` | US-format mailing address. |
-| `contactEmail` | `"hello@yourorg.org"` | Used everywhere a contact link or `mailto:` appears, including legal-page contact slots. |
-| `phone` | `"(555) 123-4567"` | Optional. |
-| `siteUrl` | `"https://give.yourorg.org"` | Optional canonical URL. Used by the thank-you page's social-share intent so the link works under your custom domain. Falls back to `window.location.origin` if omitted. |
-
-### `paypal` — payment routing
-
-```ts
-paypal: {
-  hostedButtonId: "REPLACE_WITH_YOUR_BUTTON_ID",
-  flowMode: "newTab",      // or "sameTab"
-  returnUrl: undefined,    // optional — see PayPal setup below
-},
-```
-
-- **`hostedButtonId`** is the only required value. See **PayPal setup** below for how to find it.
-- **`flowMode`**:
-  - `"newTab"` opens PayPal in a new browser tab and leaves your site visible in the original tab. Recommended for most cloners — donors can return to your thank-you page manually.
-  - `"sameTab"` redirects the donor's current tab to PayPal. Use this only if you've configured a `returnUrl` so PayPal can send the donor back to your `/thank-you` page after the donation completes.
-- **`returnUrl`** is optional but recommended for a seamless flow. Set it to `"https://yourdomain.org/thank-you"` after you deploy, then configure the same URL inside your PayPal hosted button's settings.
-
-### `amounts` — suggested amounts and impact labels
-
-```ts
-amounts: {
-  oneTime: [
-    { amount: 25,  impactLabel: "Stocks a family's pantry for a week" },
-    { amount: 50,  impactLabel: "Funds one after-school session", default: true },
-    { amount: 100, impactLabel: "Provides emergency rent assistance" },
-    { amount: 250, impactLabel: "Sponsors a child for a month" },
-    { amount: 500, impactLabel: "Supports a delivery route" },
-  ],
-  monthly: [ /* same shape, smaller amounts */ ],
-},
-```
-
-- Use **4–6** preset amounts per mode.
-- Use **smaller** amounts for monthly than for one-time.
-- Mark exactly one amount per mode with `default: true` — that's the visually highlighted option.
-- Impact labels should be **concrete and defensible**. Avoid vague tiers like "Bronze donor".
-
-### `branding` — colors, logo, hero image
-
-Colors are HSL triplets so they slot directly into Tailwind's `hsl(var(--token))` pattern. Pick from any color tool (Coolors, Paletton, etc.) and convert to HSL.
-
-```ts
-branding: {
-  colors: {
-    primary:            "176 64% 26%",  // your main CTA + brand color
-    primaryForeground:  "40 40% 98%",   // text color on top of primary
-    accent:             "32 92% 52%",   // optional accent (e.g. trust bar)
-    accentForeground:   "30 60% 12%",
-    surface:            "40 40% 99%",   // page background
-    surfaceMuted:       "40 30% 96%",   // alternating section background
-    text:               "200 22% 12%",  // body text
-    textMuted:          "200 12% 38%",  // subtitles, captions
-    border:             "200 16% 88%",
-  },
-  logoPath: "/logo.svg",                // under /public
-  heroImagePath: "/hero.webp",
-  supportingImagePaths: ["/story.webp"],
-},
-```
-
-> **Before / after.** To rebrand from teal to deep blue, change `primary` from `"176 64% 26%"` to `"222 60% 28%"` and `primaryForeground` stays. Reload — every button, link, and CTA on every page updates. No CSS edits required.
-
-### `copy` — page-by-page text content
-
-`copy` is broken down per page (`landing`, `thankYou`, `about`, `impact`, `transparency`, `contact`, plus the legal pages under `copy.legal`). Each page exposes only the fields you'd actually want to edit:
-
-- **`copy.landing`**: hero headline + subhead, eyebrow, case for support (3–4 short sentences), donation-module text, trust-strip items, charity-rating badges, story block, gift-impact tier copy, FAQ items, secondary giving (DAF / matching gifts / planned giving), final CTA.
-- **`copy.thankYou`**: warm thank-you headline, what-happens-next list, share message + URL token, monthly upsell deep-link.
-- **`copy.about`**: founding story, leadership team, partners, milestones.
-- **`copy.impact`**: hero metrics, beneficiary stories, budget breakdown, gift-impact tiers (each tier deep-links back to landing with the right amount preselected via `?amount=NN&mode=oneTime|monthly`).
-- **`copy.transparency`**: financial summary, links to your annual report and IRS Form 990, board roster.
-- **`copy.contact`**: contact intro, addresses, contact methods.
-- **`copy.legal`**: `disclaimer` and `disclaimerLight` banner wording, `governingState`, plus `privacy`, `terms`, `refundPolicy`, and `donorBillOfRights`. Each legal page is a `LegalPageCopy` with `title`, `lastUpdated`, `intro`, and an array of `sections`. Sections support `body` paragraphs, `bullets`, and `links`. **Tokens** like `{orgName}`, `{contactEmail}`, `{ein}`, and `{state}` interpolate automatically — write them in your config and they'll be substituted at render time.
-
-### `social`, `analyticsHeadHtml`, and `features`
-
-- `social`: optional `twitter`, `facebook`, `instagram`, `linkedin`, `youtube` links — shown in the footer.
-- `analyticsHeadHtml`: optional raw HTML snippet (e.g. a Plausible or GA4 script tag) injected into `<head>`. Leave undefined to ship without analytics.
-- `features`: feature flags to toggle the sticky mobile CTA, the FAQ section, the testimonial slot, etc.
+- **Suggested amounts**: pick 4–6 amounts per mode (one-time and monthly). Use smaller numbers for monthly. Mark exactly one as the default with `default: true`.
+- **Impact labels**: be concrete and honest. "Stocks a family's pantry for a week" is stronger than "Bronze donor."
+- **Colors**: the template uses HSL color values. Tools like <https://hslpicker.com> let you pick a color and copy the three numbers.
+- **Images**: choose photos that show one clear person, family, animal, or project — not a collage. Compress them before uploading (try <https://squoosh.app>) so your site loads quickly.
 
 ---
 
-## PayPal setup
+## Setting up PayPal
 
-1. Go to <https://www.paypal.com/donate/buttons> while signed in to your nonprofit PayPal account.
-2. Click **Create Button**, choose **Donations**, and fill in your organization name and (optionally) preset amounts.
+1. Sign in to your nonprofit PayPal account and go to <https://www.paypal.com/donate/buttons>.
+2. Click **Create Button**, choose **Donations**, and fill in your organization name and (optional) preset amounts.
 3. Under **Step 3: Customize advanced features**, set:
    - **Take donors to this URL when they finish**: `https://yourdomain.org/thank-you`
    - **Take donors to this URL when they cancel**: `https://yourdomain.org/`
 4. Click **Save Changes**, then **Create Button**.
-5. On the resulting page, switch to the **Email** tab. The button ID is the long alphanumeric string at the end of the donation URL (after `hosted_button_id=`). Copy it.
+5. On the next page, switch to the **Email** tab. Your button ID is the long string of letters and numbers at the end of the donation link, after `hosted_button_id=`. Copy it.
 6. Paste it into `site.config.ts`:
-
    ```ts
    paypal: {
      hostedButtonId: "YOUR_BUTTON_ID_HERE",
      flowMode: "newTab",
-     returnUrl: "https://yourdomain.org/thank-you", // optional but recommended
+     returnUrl: "https://yourdomain.org/thank-you",
    },
    ```
 
-7. **Switching new-tab vs same-tab**: change `flowMode` to `"sameTab"` if you want PayPal to take over the current tab. Same-tab is only a good experience if `returnUrl` is set, because otherwise donors land on PayPal's generic "thanks" page instead of yours.
+**`flowMode` options**:
+- `"newTab"` (recommended): PayPal opens in a new tab so your site stays visible.
+- `"sameTab"`: the donor's tab is taken over by PayPal. Only use this if you've also set `returnUrl` so they come back to your thank-you page.
 
 ---
 
@@ -173,85 +96,77 @@ branding: {
 
 | Slot | Recommended size | Format | Target file size |
 | ---- | ---------------- | ------ | ---------------- |
-| Hero image | 1600×900 (16:9) | WebP or AVIF | < 250–400 KB |
-| Mobile hero crop | 1080×1350 (4:5) | WebP or AVIF | < 250 KB |
-| Supporting / story | 1200×800 | WebP or AVIF | < 200 KB |
-| Logo | SVG (preferred) or 512×512 PNG | SVG / PNG | < 30 KB |
-| Open Graph share image | 1200×630 | JPG or PNG | < 300 KB |
+| Hero image | 1600×900 | WebP or AVIF | under 400 KB |
+| Supporting / story | 1200×800 | WebP or AVIF | under 200 KB |
+| Logo | SVG (best) or 512×512 PNG | SVG / PNG | under 30 KB |
+| Social-share image | 1200×630 | JPG or PNG | under 300 KB |
 
-To swap images:
-
-1. Drop your file into `artifacts/donation-site/public/` (e.g. `public/hero.webp`).
-2. Either keep the existing filenames in config or update `branding.heroImagePath`, `branding.supportingImagePaths`, and `branding.logoPath`.
-
-Choose imagery that shows **one** clear beneficiary (a person, family, animal, or single project) — not a collage. Hopeful, direct, humane, never exploitative. Compress aggressively before uploading.
+Drop your files into `artifacts/donation-site/public/` (using the Replit file browser is easiest). Keep the same filenames the template uses, or update the matching paths in `site.config.ts`.
 
 ---
 
-## Compliance checklist
+## Legal pages — please read
 
-Every legal page in this template is a **starter** — sensible defaults for a small US-based 501(c)(3), but every nonprofit's situation is different. Before you publish, **have your own counsel review and tailor**:
+The Privacy Policy, Terms of Use, Refund/Correction Policy, and Donor Bill of Rights pages are **starting points**, not legal advice. They're sensible defaults for a small US-based 501(c)(3), but every nonprofit's situation is different.
 
-- [ ] **Privacy Policy** (`/privacy`) — review what data you actually collect, how you use it, retention, and donor rights in your state. Update `copy.legal.privacy` accordingly.
-- [ ] **Terms of Use** (`/terms`) — review the governing-law clause (`copy.legal.governingState`), liability terms, and acceptable-use language for your jurisdiction.
-- [ ] **Refund / Correction Policy** (`/refund-policy`) — review the refund window, the chargeback language, and the monthly-cancellation instructions to make sure they match your actual operations.
-- [ ] **Donor Bill of Rights** (`/donor-bill-of-rights`) — the standard sector-wide ten-point Donor Bill of Rights. Reproduced as-is from AFP / AHP / CASE / Giving Institute. Review the "How we live this out" closing section to make sure each commitment is one you can actually keep.
-- [ ] Update **`copy.legal.disclaimer`** and **`copy.legal.disclaimerLight`** banners (they currently say "starter template"). Once your counsel has reviewed the pages and you're confident in the language, you may want to soften or remove the banners for production.
-- [ ] Confirm the **Last updated** date on every legal page.
-- [ ] If you use **cookies**, **analytics**, or **third-party trackers**, add a cookie-consent banner (see Recommended next steps).
+**Before you publish**, please:
 
----
-
-## Recommended next steps
-
-These are not required to ship the donation funnel, but most production nonprofit sites add them eventually:
-
-- **Analytics.** Drop a GA4 or Plausible snippet into `site.analyticsHeadHtml`. Both render into `<head>` automatically.
-- **Newsletter integration.** The contact page has a newsletter slot. Wire it to Mailchimp, Buttondown, ConvertKit, etc. by replacing the form's `action`.
-- **A/B testing.** Try defaulting to monthly vs one-time, different headline copy, different default amounts. The config-driven design makes this safe.
-- **Contact form provider.** The contact form is a `mailto:` link by default. For a real form-submission flow, plug in Formspree, Basin, Web3Forms, or a serverless function.
-- **Cookie consent banner.** If you add analytics or trackers, add a consent banner (Klaro, Cookiebot, Osano).
-- **Social-share images.** Replace `public/opengraph.jpg` with a branded OG image so links shared on Facebook / LinkedIn / Slack look polished.
+- [ ] Have your own attorney review and tailor every legal page to your state, programs, and data practices
+- [ ] Update the disclaimer banners at the top of each legal page (they currently say "starter template" — you may want to soften or remove them once your counsel has signed off)
+- [ ] Double-check the **Last updated** date on each page
+- [ ] If you use analytics or any third-party tracking scripts, add a cookie-consent banner
 
 ---
 
-## Deploying
+## Publishing your site
 
-This template is deployed via **Replit Deployments**:
+The template is published using **Replit Deployments**:
 
-1. In the Replit workspace, click **Publish** (top-right).
-2. Choose **Autoscale** or **Static** (this site is fully static, so Static is cheaper and faster).
-3. Replit builds the site and gives you a `*.replit.app` URL. Open it to confirm everything works.
-4. **Custom domain.** In the Deployment settings, click **Add custom domain** and follow the DNS instructions. Replit handles HTTPS automatically.
-5. After your custom domain is live, update `org.siteUrl` in `site.config.ts` and the `returnUrl` inside your PayPal hosted button settings.
-
----
-
-## Known limitations
-
-- **No backend.** Donations are processed entirely by PayPal. The template does not store donor data, send email receipts (PayPal does that), or maintain a CRM. Wire those up separately if you need them.
-- **PayPal hosted button only.** This template intentionally doesn't integrate Stripe, Apple Pay, Google Pay, Venmo (outside of PayPal's checkout), or wallet buttons directly on-page. PayPal's hosted checkout will surface those wallet options on PayPal's own page if your account supports them.
-- **Contact form is a `mailto:` link.** No server-side form handling is included. See **Recommended next steps**.
-- **Single language.** No i18n is wired up. Translate `site.config.ts` and duplicate routes if you need multiple languages.
-- **Demo content is illustrative.** Org name, financial figures, board members, and impact stats are placeholders. Replace every value before publishing.
+1. In Replit, click **Publish** (top-right).
+2. Choose **Static** — this site has no backend, and Static deployments are cheaper and faster for sites like this.
+3. Replit builds the site and gives you a `*.replit.app` web address. Open it to confirm everything works.
+4. **Custom domain**: in your Deployment settings, click **Add custom domain** and follow the DNS instructions. Replit handles HTTPS for you automatically.
+5. Once your custom domain is live, update `org.siteUrl` in `site.config.ts`, and update the **Return URL** inside your PayPal hosted button settings to match.
 
 ---
 
-## QA pass summary (template release)
+## Frequently asked questions
 
-Before this template was published, the following checks were run against the demo content:
+**Do I need to know how to code?**
+No. You'll be editing one configuration file — mostly replacing example text with your own words. If you can edit a Word document, you can edit this file.
 
-- **Build**: `pnpm run build` succeeds. Production bundle ~411 KB JS / 61 KB CSS, no TypeScript errors, no console errors in the production preview.
-- **Tests**: 186 Vitest tests across 10 files pass, covering the donation module, FAQ, sticky CTA, PayPal URL builder, and every page (landing, thank-you, transparency, contact, privacy, terms, refund policy, donor bill of rights).
-- **Hardcoded-content audit**: no org name, EIN, brand color, or other config-able value is hardcoded in any component or page — every visible value resolves through `site.config.ts`. Verified via repo-wide search.
-- **Config-swap test**: changing `org.name` and `branding.colors.primary` propagates everywhere with no leakage.
-- **Responsive layout**: landing, donor bill of rights, transparency, contact, and thank-you pages render correctly at 375 px (mobile), 768 px (tablet), and 1280 px (desktop) without horizontal scroll.
-- **Navigation**: every header, footer, and inline link works. The deep-link from the impact page (`?amount=NN&mode=oneTime|monthly`) preselects the right amount on landing. The thank-you page's monthly upsell deep-links to landing in monthly mode.
-- **Accessibility spot-check**: keyboard navigation through the donation flow and contact form works, focus rings are visible, accordion uses Radix `aria-` attributes, color contrast is WCAG AA on text and buttons.
-- **Donation flow integration**: amount selection updates the CTA label, click opens the PayPal URL with the correct amount and target, and the manual `/thank-you` route renders the post-donation page.
+**Where does the donation money go?**
+Straight to your PayPal nonprofit account. This template never touches the money or stores donor data. PayPal also sends the email receipts.
 
-Re-run these checks after you customize `site.config.ts` to confirm nothing in your content broke a layout assumption.
+**Is donor data stored anywhere on my site?**
+No. The template has no backend and no database. The only thing that runs is the website itself — donor information lives in PayPal's systems.
+
+**Can I add a Stripe / Apple Pay / Google Pay button?**
+Not out of the box. The template intentionally only uses PayPal's hosted button to keep things simple and avoid needing your own payment integration. PayPal's checkout page may surface wallet options to donors automatically depending on your account.
+
+**Can I add a real contact form (instead of `mailto:`)?**
+Yes — the contact page is a `mailto:` link by default. To add a real form, sign up for a free service like Formspree, Tally, or Web3Forms and follow their embed instructions. The contact page has a clearly marked spot for the embed code.
+
+**Can I translate it into another language?**
+Yes — translate the text values inside `site.config.ts`. The template doesn't include built-in support for showing multiple languages side by side; that would require additional work.
+
+**Is it really free?**
+The template itself is free under the MIT license. Replit's free plan is enough to build and preview; you'll want a paid Replit plan to deploy with a custom domain. PayPal does not charge a setup fee for nonprofit accounts (they take a small per-donation fee — check current rates).
+
+---
+
+## Security notes
+
+This is a **fully static frontend** — no server, no database, no API keys stored in code. That means:
+
+- There are no secrets or credentials to leak from the repository.
+- Your PayPal **hosted button ID** in `site.config.ts` is **safe to commit publicly** — it's the same ID PayPal embeds in donation links, and it cannot be used to access your PayPal account or move money.
+- The site collects no donor information directly. All payment and personal data is entered on PayPal's pages, under PayPal's security.
+
+If you fork this template, you can publish your fork publicly without worrying about exposing donor data — there isn't any to expose.
+
+---
 
 ## License
 
-MIT — use this template for any nonprofit purpose, commercial or otherwise. Attribution appreciated but not required.
+MIT — use this template for any nonprofit purpose, commercial or otherwise. Attribution is appreciated but not required.
